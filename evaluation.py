@@ -48,27 +48,27 @@ def RankingEval(datapath='data/', dataset='WordNet3.0-test',
 
     res = RankingScoreIdx(ranklfunc, rankrfunc, idxl, idxr, idxo)
     dres = {}
-    dres.update({'macrolmean': np.mean(res[0])})
-    dres.update({'macrolmedian': np.median(res[0])})
-    dres.update({'macrolp@10': np.mean(np.asarray(res[0]) < 10) * 10.})
-    dres.update({'macrormean': np.mean(res[1])})
-    dres.update({'macrormedian': np.median(res[1])})
-    dres.update({'macrorp@10': np.mean(np.asarray(res[1]) < 10) * 10.})
+    dres.update({'microlmean': np.mean(res[0])})
+    dres.update({'microlmedian': np.median(res[0])})
+    dres.update({'microlp@10': np.mean(np.asarray(res[0]) < 10) * 10.})
+    dres.update({'micrormean': np.mean(res[1])})
+    dres.update({'micrormedian': np.median(res[1])})
+    dres.update({'microrp@10': np.mean(np.asarray(res[1]) < 10) * 10.})
     resg = res[0] + res[1]
-    dres.update({'macrogmean': np.mean(resg)})
-    dres.update({'macrogmedian': np.median(resg)})
-    dres.update({'macrogp@10': np.mean(np.asarray(resg) < 10) * 10.})
+    dres.update({'microgmean': np.mean(resg)})
+    dres.update({'microgmedian': np.median(resg)})
+    dres.update({'microgp@10': np.mean(np.asarray(resg) < 10) * 10.})
 
-    print "### MACRO:"
+    print "### MICRO:"
     print "\t-- left   >> mean: %s, median: %s, p@10: %s%%" % (
-            round(dres['macrolmean'], 5), round(dres['macrolmedian'], 5),
-            round(dres['macrolp@10'], 3))
+            round(dres['microlmean'], 5), round(dres['microlmedian'], 5),
+            round(dres['microlp@10'], 3))
     print "\t-- right  >> mean: %s, median: %s, p@10: %s%%" % (
-            round(dres['macrormean'], 5), round(dres['macrormedian'], 5),
-            round(dres['macrorp@10'], 3))
+            round(dres['micrormean'], 5), round(dres['micrormedian'], 5),
+            round(dres['microrp@10'], 3))
     print "\t-- global >> mean: %s, median: %s, p@10: %s%%" % (
-            round(dres['macrogmean'], 5), round(dres['macrogmedian'], 5),
-            round(dres['macrogp@10'], 3))
+            round(dres['microgmean'], 5), round(dres['microgmedian'], 5),
+            round(dres['microgp@10'], 3))
 
     listrel = set(idxo)
     dictrelres = {}
@@ -113,26 +113,26 @@ def RankingEval(datapath='data/', dataset='WordNet3.0-test',
     dres.update({'dictrelrp10': dictrelrp10})
     dres.update({'dictrelgp10': dictrelgp10})
 
-    dres.update({'microlmean': np.mean(dictrellmean.values())})
-    dres.update({'microlmedian': np.mean(dictrellmedian.values())})
-    dres.update({'microlp@10': np.mean(dictrellp10.values())})
-    dres.update({'micrormean': np.mean(dictrelrmean.values())})
-    dres.update({'micrormedian': np.mean(dictrelrmedian.values())})
-    dres.update({'microrp@10': np.mean(dictrelrp10.values())})
-    dres.update({'microgmean': np.mean(dictrelgmean.values())})
-    dres.update({'microgmedian': np.mean(dictrelgmedian.values())})
-    dres.update({'microgp@10': np.mean(dictrelgp10.values())})
+    dres.update({'macrolmean': np.mean(dictrellmean.values())})
+    dres.update({'macrolmedian': np.mean(dictrellmedian.values())})
+    dres.update({'macrolp@10': np.mean(dictrellp10.values())})
+    dres.update({'macrormean': np.mean(dictrelrmean.values())})
+    dres.update({'macrormedian': np.mean(dictrelrmedian.values())})
+    dres.update({'macrorp@10': np.mean(dictrelrp10.values())})
+    dres.update({'macrogmean': np.mean(dictrelgmean.values())})
+    dres.update({'macrogmedian': np.mean(dictrelgmedian.values())})
+    dres.update({'macrogp@10': np.mean(dictrelgp10.values())})
 
-    print "### MICRO:"
+    print "### MACRO:"
     print "\t-- left   >> mean: %s, median: %s, p@10: %s%%" % (
-            round(dres['microlmean'], 5), round(dres['microlmedian'], 5),
-            round(dres['microlp@10'], 3))
+            round(dres['macrolmean'], 5), round(dres['macrolmedian'], 5),
+            round(dres['macrolp@10'], 3))
     print "\t-- right  >> mean: %s, median: %s, p@10: %s%%" % (
-            round(dres['micrormean'], 5), round(dres['micrormedian'], 5),
-            round(dres['microrp@10'], 3))
+            round(dres['macrormean'], 5), round(dres['macrormedian'], 5),
+            round(dres['macrorp@10'], 3))
     print "\t-- global >> mean: %s, median: %s, p@10: %s%%" % (
-            round(dres['microgmean'], 5), round(dres['microgmedian'], 5),
-            round(dres['microgp@10'], 3))
+            round(dres['macrogmean'], 5), round(dres['macrogmedian'], 5),
+            round(dres['macrogp@10'], 3))
 
     return dres
 
