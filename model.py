@@ -313,7 +313,7 @@ def RankRightFnIdx(fnsim, embeddings, leftop, rightop, subtensorspec=None):
         rhs = embedding.E.T
     rell = (relationl.E[:, idxrel]).reshape((1, relationl.D))
     relr = (relationr.E[:, idxrel]).reshape((1, relationr.D))
-    tmp = leftop(lhs,rell)
+    tmp = leftop(lhs, rell)
     simi = fnsim(tmp.reshape((1, tmp.shape[1])), rightop(rhs, relr))
     return theano.function([idxleft, idxrel], [simi], on_unused_input='ignore')
 
@@ -331,7 +331,7 @@ def RankLeftFnIdx(fnsim, embeddings, leftop, rightop, subtensorspec=None):
         lhs = embedding.E.T
     rell = (relationl.E[:, idxrel]).reshape((1, relationl.D))
     relr = (relationr.E[:, idxrel]).reshape((1, relationr.D))
-    tmp = rightop(rhs,relr)
+    tmp = rightop(rhs, relr)
     simi = fnsim(leftop(lhs, rell), tmp.reshape((1, tmp.shape[1])))
     return theano.function([idxright, idxrel], [simi],
             on_unused_input='ignore')
