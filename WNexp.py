@@ -137,7 +137,7 @@ def WNexp(state, channel):
             f = open(state.loademb)
             embeddings = cPickle.load(f)
             f.close()
-        if state.op == 'SE':
+        if state.op == 'SE' and type(embeddings) is not list:
             relationl = Embeddings(np.random, state.Nrel,
                     state.ndim * state.nhid, 'rell')
             relationr = Embeddings(np.random, state.Nrel,
