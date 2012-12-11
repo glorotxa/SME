@@ -50,14 +50,14 @@ def RankingEval(datapath='data/', dataset='WordNet3.0-test',
     dres = {}
     dres.update({'macrolmean': np.mean(res[0])})
     dres.update({'macrolmedian': np.median(res[0])})
-    dres.update({'macrolp@10': np.mean(np.asarray(res[0]) <= 10) * 10.})
+    dres.update({'macrolp@10': np.mean(np.asarray(res[0]) < 10) * 10.})
     dres.update({'macrormean': np.mean(res[1])})
     dres.update({'macrormedian': np.median(res[1])})
-    dres.update({'macrorp@10': np.mean(np.asarray(res[1]) <= 10) * 10.})
+    dres.update({'macrorp@10': np.mean(np.asarray(res[1]) < 10) * 10.})
     resg = res[0] + res[1]
     dres.update({'macrogmean': np.mean(resg)})
     dres.update({'macrogmedian': np.median(resg)})
-    dres.update({'macrogp@10': np.mean(np.asarray(resg) <= 10) * 10.})
+    dres.update({'macrogp@10': np.mean(np.asarray(resg) < 10) * 10.})
 
     print "### MACRO:"
     print "\t-- left   >> mean: %s, median: %s, p@10: %s%%" % (
@@ -98,10 +98,10 @@ def RankingEval(datapath='data/', dataset='WordNet3.0-test',
         dictrellmedian[i] = np.median(dictrelres[i][0])
         dictrelrmedian[i] = np.median(dictrelres[i][1])
         dictrelgmedian[i] = np.median(dictrelres[i][0] + dictrelres[i][1])
-        dictrellp10[i] = np.mean(np.asarray(dictrelres[i][0]) <= 10) * 10.
-        dictrelrp10[i] = np.mean(np.asarray(dictrelres[i][1]) <= 10) * 10.
+        dictrellp10[i] = np.mean(np.asarray(dictrelres[i][0]) < 10) * 10.
+        dictrelrp10[i] = np.mean(np.asarray(dictrelres[i][1]) < 10) * 10.
         dictrelgp10[i] = np.mean(np.asarray(dictrelres[i][0] +
-                                            dictrelres[i][1]) <= 10) * 10.
+                                            dictrelres[i][1]) < 10) * 10.
 
     dres.update({'dictrellmean': dictrellmean})
     dres.update({'dictrelrmean': dictrelrmean})
