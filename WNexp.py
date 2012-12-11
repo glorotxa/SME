@@ -143,6 +143,12 @@ def WNexp(state, channel):
             f = open(state.loademb)
             embeddings = cPickle.load(f)
             f.close()
+            if state.op == 'SE':
+                relationl = Embeddings(np.random, state.Nrel,
+                        state.ndim * state.nhid, 'rell')
+                relationr = Embeddings(np.random, state.Nrel,
+                        state.ndim * state.nhid, 'relr')
+                embeddings = [embeddings, relationl, relationr]
         simfn = eval(state.simfn + 'sim')
     else:
         f = open(state.loadmodel)
