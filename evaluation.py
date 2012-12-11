@@ -67,8 +67,8 @@ def RankingEval(datapath='data/', dataset='WordNet3.0-test',
             round(dres['macrormean'], 5), round(dres['macrormedian'], 5),
             round(dres['macrorp@10'], 3))
     print "\t-- global >> mean: %s, median: %s, p@10: %s%%" % (
-            round(dres['macrormean'], 5), round(dres['macrormedian'], 5),
-            round(dres['macrorp@10'], 3))
+            round(dres['macrogmean'], 5), round(dres['macrogmedian'], 5),
+            round(dres['macrogp@10'], 3))
 
     listrel = set(idxo)
     dictrelres = {}
@@ -131,8 +131,8 @@ def RankingEval(datapath='data/', dataset='WordNet3.0-test',
             round(dres['micrormean'], 5), round(dres['micrormedian'], 5),
             round(dres['microrp@10'], 3))
     print "\t-- global >> mean: %s, median: %s, p@10: %s%%" % (
-            round(dres['micrormean'], 5), round(dres['micrormedian'], 5),
-            round(dres['microrp@10'], 3))
+            round(dres['microgmean'], 5), round(dres['microgmedian'], 5),
+            round(dres['microgp@10'], 3))
 
     return dres
 
