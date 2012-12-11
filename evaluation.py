@@ -14,8 +14,8 @@ def convert2idx(spmat):
 
 
 def RankingEval(datapath='data/', dataset='WordNet3.0-test',
-        loadmodel='best_valid_model.pkl', neval=20, Nsyn=40989):
-    
+        loadmodel='best_valid_model.pkl', neval='all', Nsyn=40989):
+
     # Load model
     f = open(loadmodel)
     embeddings = cPickle.load(f)
@@ -23,21 +23,21 @@ def RankingEval(datapath='data/', dataset='WordNet3.0-test',
     rightop = cPickle.load(f)
     simfn = cPickle.load(f)
     f.close()
-    
+
     # Load data
     l = load_file(datapath + dataset + '-lhs.pkl')
     r = load_file(datapath + dataset + '-rhs.pkl')
     o = load_file(datapath + dataset + '-rel.pkl')
     if type(embeddings) is list:
-        o = o[-embeddings[1].N:,:]
-    
+        o = o[-embeddings[1].N:, :]
+
     # Convert sparse matrix to indexes
     if neval == 'all':
-        idxl = convert2idx(l) 
+        idxl = convert2idx(l)
         idxr = convert2idx(r)
         idxo = convert2idx(o)
     else:
-        idxl = convert2idx(l)[:neval] 
+        idxl = convert2idx(l)[:neval]
         idxr = convert2idx(r)[:neval]
         idxo = convert2idx(o)[:neval]
 
@@ -61,13 +61,13 @@ def RankingEval(datapath='data/', dataset='WordNet3.0-test',
 
     print "### MACRO:"
     print "\t-- left   >> mean: %s, median: %s, p@10: %s%%" % (
-            round(dres['macrolmean'], 5), round(dres['macrolmedian'], 5), 
+            round(dres['macrolmean'], 5), round(dres['macrolmedian'], 5),
             round(dres['macrolp@10'], 3))
     print "\t-- right  >> mean: %s, median: %s, p@10: %s%%" % (
-            round(dres['macrormean'], 5), round(dres['macrormedian'], 5), 
+            round(dres['macrormean'], 5), round(dres['macrormedian'], 5),
             round(dres['macrorp@10'], 3))
     print "\t-- global >> mean: %s, median: %s, p@10: %s%%" % (
-            round(dres['macrormean'], 5), round(dres['macrormedian'], 5), 
+            round(dres['macrormean'], 5), round(dres['macrormedian'], 5),
             round(dres['macrorp@10'], 3))
 
     listrel = set(idxo)
@@ -85,10 +85,10 @@ def RankingEval(datapath='data/', dataset='WordNet3.0-test',
     for i in listrel:
         dictrelres.update({i: [[], []]})
 
-    for i,j in enumerate(res[0]):
+    for i, j in enumerate(res[0]):
         dictrelres[idxo[i]][0] += [j]
 
-    for i,j in enumerate(res[1]):
+    for i, j in enumerate(res[1]):
         dictrelres[idxo[i]][1] += [j]
 
     for i in listrel:
@@ -112,7 +112,7 @@ def RankingEval(datapath='data/', dataset='WordNet3.0-test',
     dres.update({'dictrellp10': dictrellp10})
     dres.update({'dictrelrp10': dictrelrp10})
     dres.update({'dictrelgp10': dictrelgp10})
-    
+
     dres.update({'microlmean': np.mean(dictrellmean.values())})
     dres.update({'microlmedian': np.mean(dictrellmedian.values())})
     dres.update({'microlp@10': np.mean(dictrellp10.values())})
@@ -122,16 +122,16 @@ def RankingEval(datapath='data/', dataset='WordNet3.0-test',
     dres.update({'microgmean': np.mean(dictrelgmean.values())})
     dres.update({'microgmedian': np.mean(dictrelgmedian.values())})
     dres.update({'microgp@10': np.mean(dictrelgp10.values())})
-    
+
     print "### MICRO:"
     print "\t-- left   >> mean: %s, median: %s, p@10: %s%%" % (
-            round(dres['microlmean'], 5), round(dres['microlmedian'], 5), 
+            round(dres['microlmean'], 5), round(dres['microlmedian'], 5),
             round(dres['microlp@10'], 3))
     print "\t-- right  >> mean: %s, median: %s, p@10: %s%%" % (
-            round(dres['micrormean'], 5), round(dres['micrormedian'], 5), 
+            round(dres['micrormean'], 5), round(dres['micrormedian'], 5),
             round(dres['microrp@10'], 3))
     print "\t-- global >> mean: %s, median: %s, p@10: %s%%" % (
-            round(dres['micrormean'], 5), round(dres['micrormedian'], 5), 
+            round(dres['micrormean'], 5), round(dres['micrormedian'], 5),
             round(dres['microrp@10'], 3))
 
     return dres
