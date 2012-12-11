@@ -218,12 +218,12 @@ for options in ['normal', 'bridge', 'ambiguated']:
         ct = 0
         for i in dat:
             lhs, rel, rhs = parseline(i[:-1])
-            if options == 1:
+            if options == 'normal':
                 inpl[synset2idx[lhs[0]], ct] = 1
                 inpr[synset2idx[rhs[0]], ct] = 1
                 inpo[lemme2idx[rel[0]], ct] = 1
                 ct += 1
-            if options == 2:
+            if options == 'bridge':
                 for j in synset2lemme[lhs[0]]:
                     if len(lemme2synset[j]) != 1:
                         inpl[lemme2idx[j], ct] = 1
@@ -236,12 +236,12 @@ for options in ['normal', 'bridge', 'ambiguated']:
                         inpl[synset2idx[lhs[0]], ct] = 1
                         inpo[lemme2idx[rel[0]], ct] = 1
                         ct += 1
-            if options == 3:
+            if options == 'ambiguated':
                 tmplist = synset2lemme[lhs[0]]
-                tmpidx = tmplist[np.random.randint(len(tmplist))]
+                tmpidx = lemme2idx[tmplist[np.random.randint(len(tmplist))]]
                 inpl[tmpidx, ct] = 1
                 tmplist = synset2lemme[rhs[0]]
-                tmpidx = tmplist[np.random.randint(len(tmplist))]
+                tmpidx = lemme2idx[tmplist[np.random.randint(len(tmplist))]]
                 inpr[tmpidx, ct] = 1
                 inpo[lemme2idx[rel[0]], ct] = 1
                 ct += 1
