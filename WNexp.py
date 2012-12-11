@@ -28,6 +28,7 @@ def convert2idx(spmat):
     rows, cols = spmat.nonzero()
     return rows[np.argsort(cols)]
 
+
 class DD(dict):
     def __getattr__(self, attr):
         if attr == '__getstate__':
@@ -51,7 +52,7 @@ class DD(dict):
 
     def __deepcopy__(self, memo):
         z = DD()
-        for k,kv in self.iteritems():
+        for k, kv in self.iteritems():
             z[k] = copy.deepcopy(kv, memo)
         return z
 
@@ -130,20 +131,26 @@ def WNexp(state, channel):
             leftop = LayerMat('lin', state.ndim, state.nhid)
             rightop = LayerMat('lin', state.ndim, state.nhid)
         # embeddings
-        embeddings = Embeddings(np.random, state.Nent, state.ndim, 'embedding')
-        if state.op == 'SE':
-            relationl = Embeddings(np.random, state.Nrel,
-                    state.ndim * state.nhid, 'relationl')
-            relationr = Embeddings(np.random, state.Nrel,
-                    state.ndim * state.nhid, 'relationr')
-            embeddings = [embeddings, relationl, relationr]
+        if not state.loademb:
+            embeddings = Embeddings(np.random, state.Nent, state.ndim, 'emb')
+            if state.op == 'SE':
+                relationl = Embeddings(np.random, state.Nrel,
+                        state.ndim * state.nhid, 'rell')
+                relationr = Embeddings(np.random, state.Nrel,
+                        state.ndim * state.nhid, 'relr')
+                embeddings = [embeddings, relationl, relationr]
+        else:
+            f = open(state.loademb)
+            embeddings = cPickle.load(f)
+            f.close()
+        simfn = eval(state.simfn + 'sim')
     else:
         f = open(state.loadmodel)
         embeddings = cPickle.load(f)
         leftop = cPickle.load(f)
         rightop = cPickle.load(f)
+        simfn = cPickle.load(f)
         f.close()
-    simfn = eval(state.simfn + 'sim')
 
     # Function compilation
     trainfunc = TrainFn1Member(simfn, embeddings, leftop, rightop,
@@ -215,6 +222,7 @@ def WNexp(state, channel):
                 cPickle.dump(embeddings, f, -1)
                 cPickle.dump(leftop, f, -1)
                 cPickle.dump(rightop, f, -1)
+                cPickle.dump(simfn, f, -1)
                 f.close()
                 print >> sys.stderr, "\t\t##### NEW BEST VALID >> test: %s" % (
                         state.besttest)
@@ -223,6 +231,7 @@ def WNexp(state, channel):
             cPickle.dump(embeddings, f, -1)
             cPickle.dump(leftop, f, -1)
             cPickle.dump(rightop, f, -1)
+            cPickle.dump(simfn, f, -1)
             f.close()
             state.nbepochs = epoch_count
             print >> sys.stderr, "\t(the evaluation took %s seconds)" % (
@@ -233,9 +242,10 @@ def WNexp(state, channel):
 
 
 def launch(datapath='data/', dataset='WordNet3.0', Nent=52165,
-        Nsyn=40989, Nrel=35, loadmodel=False, op='Unstructured', simfn='Dot',
-        ndim=50, nhid=50, marge=1., lremb=0.1, lrparam=1., nbatches=100,
-        totepochs=2000, test_all=25, neval=1000, seed=666, savepath='.'):
+        Nsyn=40989, Nrel=35, loadmodel=False, loademb=False, op='Unstructured',
+        simfn='Dot', ndim=50, nhid=50, marge=1., lremb=0.1, lrparam=1.,
+        nbatches=100, totepochs=2000, test_all=1, neval=50, seed=666,
+        savepath='.'):
 
     # Argument of the experiment script
     state = DD()
@@ -246,6 +256,7 @@ def launch(datapath='data/', dataset='WordNet3.0', Nent=52165,
     state.Nsyn = Nsyn
     state.Nrel = Nrel
     state.loadmodel = loadmodel
+    state.loademb = loademb
     state.op = op
     state.simfn = simfn
     state.ndim = ndim
