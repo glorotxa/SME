@@ -103,6 +103,7 @@ def RankingEval(datapath='data/', dataset='WordNet3.0-test',
         dictrelgp10[i] = np.mean(np.asarray(dictrelres[i][0] +
                                             dictrelres[i][1]) < 10) * 10.
 
+    dres.update({'dictrelres': dictrelres})
     dres.update({'dictrellmean': dictrellmean})
     dres.update({'dictrelrmean': dictrelrmean})
     dres.update({'dictrelgmean': dictrelgmean})
@@ -133,6 +134,24 @@ def RankingEval(datapath='data/', dataset='WordNet3.0-test',
     print "\t-- global >> mean: %s, median: %s, p@10: %s%%" % (
             round(dres['macrogmean'], 5), round(dres['macrogmedian'], 5),
             round(dres['macrogp@10'], 3))
+
+    idx2lemme = cPickle.load(open('data/idx2lemme.pkl'))
+    offset = 0
+    if type(embeddings) is list:
+        o = o[-embeddings[1].N:, :]
+        offset = l.shape[0] - embeddings[1].N
+    for i in np.sort(list(listrel)):
+        print "### RELATION %s:" % idx2lemme[offset + i]
+        print "\t-- left   >> mean: %s, median: %s, p@10: %s%%, N: %s" % (
+                round(dictrellmean[i], 5), round(dictrellmedian[i], 5),
+                round(dictrellp10[i], 3), len(dictrelres[i][0]))
+        print "\t-- right  >> mean: %s, median: %s, p@10: %s%%, N: %s" % (
+                round(dictrelrmean[i], 5), round(dictrelrmedian[i], 5),
+                round(dictrelrp10[i], 3), len(dictrelres[i][1]))
+        print "\t-- global >> mean: %s, median: %s, p@10: %s%%, N: %s" % (
+                round(dictrelgmean[i], 5), round(dictrelgmedian[i], 5),
+                round(dictrelgp10[i], 3),
+                len(dictrelres[i][0] + dictrelres[i][1]))
 
     return dres
 
