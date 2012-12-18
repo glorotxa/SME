@@ -551,9 +551,9 @@ def RankingScoreIdx(sl, sr, idxtl, idxtr, idxto):
     errr = []
     for l, o, r in zip(idxtl, idxto, idxtr):
         errl += [np.argsort(np.argsort((
-            sl(r, o)[0]).flatten())[::-1]).flatten()[l]]
+            sl(r, o)[0]).flatten())[::-1]).flatten()[l] + 1]
         errr += [np.argsort(np.argsort((
-            sr(l, o)[0]).flatten())[::-1]).flatten()[r]]
+            sr(l, o)[0]).flatten())[::-1]).flatten()[r] + 1]
     return errl, errr
 
 
@@ -567,13 +567,13 @@ def RankingScore(sl, sr, so, posl, posr, poso):
     for i in range(posl.shape[1]):
         rankl = np.argsort((sl(posr[:, i], poso[:, i])[0]).flatten())
         for l in posl[:, i].nonzero()[0]:
-            errl += [np.argsort(rankl[::-1]).flatten()[l]]
+            errl += [np.argsort(rankl[::-1]).flatten()[l] + 1]
         rankr = np.argsort((sr(posl[:, i], poso[:, i])[0]).flatten())
         for r in posr[:, i].nonzero()[0]:
-            errr += [np.argsort(rankr[::-1]).flatten()[r]]
+            errr += [np.argsort(rankr[::-1]).flatten()[r] + 1]
         ranko = np.argsort((so(posl[:, i], posr[:, i])[0]).flatten())
         for o in poso[:, i].nonzero()[0]:
-            erro += [np.argsort(ranko[::-1]).flatten()[0]]
+            erro += [np.argsort(ranko[::-1]).flatten()[o] + 1]
     return errr, errl, erro
 
 
@@ -596,7 +596,7 @@ def RankingScoreWSD(sl, sr, so, posl, posr, poso, poslc, posrc, posoc):
             tmpadd[j, 0] = 0.0
             rankl = np.argsort((sl(posr[:, i], poso[:, i],
                                       tmpadd, val)[0]).flatten())
-            errl += [np.argsort(rankl[::-1]).flatten()[poslc[j, i]]]
+            errl += [np.argsort(rankl[::-1]).flatten()[poslc[j, i]] + 1]
         rnz = posr[:, i].nonzero()[0]
         for j in rnz:
             val = posr[j, i]
@@ -604,7 +604,7 @@ def RankingScoreWSD(sl, sr, so, posl, posr, poso, poslc, posrc, posoc):
             tmpadd[j, 0] = 0.0
             rankr = np.argsort((sr(posl[:, i], poso[:, i],
                                       tmpadd, val)[0]).flatten())
-            errr += [np.argsort(rankr[::-1]).flatten()[posrc[j, i]]]
+            errr += [np.argsort(rankr[::-1]).flatten()[posrc[j, i]] + 1]
         onz = poso[:, i].nonzero()[0]
         for j in onz:
             val = poso[j, i]
@@ -612,5 +612,5 @@ def RankingScoreWSD(sl, sr, so, posl, posr, poso, poslc, posrc, posoc):
             tmpadd[j, 0] = 0.0
             ranko = np.argsort((so(posl[:, i], posr[:, i],
                                       tmpadd, val)[0]).flatten())
-            erro += [np.argsort(ranko[::-1]).flatten()[posoc[j, i]]]
+            erro += [np.argsort(ranko[::-1]).flatten()[posoc[j, i]] + 1]
     return errl, errr, erro
