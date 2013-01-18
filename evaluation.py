@@ -14,7 +14,7 @@ def convert2idx(spmat):
 
 
 def RankingEval(datapath='data/', dataset='WordNet3.0-test',
-        loadmodel='best_valid_model.pkl', neval='all', Nsyn=40989):
+        loadmodel='best_valid_model.pkl', neval='all', Nsyn=40989, n=100):
 
     # Load model
     f = open(loadmodel)
@@ -50,25 +50,25 @@ def RankingEval(datapath='data/', dataset='WordNet3.0-test',
     dres = {}
     dres.update({'microlmean': np.mean(res[0])})
     dres.update({'microlmedian': np.median(res[0])})
-    dres.update({'microlp@10': np.mean(np.asarray(res[0]) <= 10) * 10.})
+    dres.update({'microlr@n': np.mean(np.asarray(res[0]) <= n) * 100})
     dres.update({'micrormean': np.mean(res[1])})
     dres.update({'micrormedian': np.median(res[1])})
-    dres.update({'microrp@10': np.mean(np.asarray(res[1]) <= 10) * 10.})
+    dres.update({'microrr@n': np.mean(np.asarray(res[1]) <= n) * 100})
     resg = res[0] + res[1]
     dres.update({'microgmean': np.mean(resg)})
     dres.update({'microgmedian': np.median(resg)})
-    dres.update({'microgp@10': np.mean(np.asarray(resg) <= 10) * 10.})
+    dres.update({'microgr@n': np.mean(np.asarray(resg) <= n) * 100})
 
     print "### MICRO:"
-    print "\t-- left   >> mean: %s, median: %s, p@10: %s%%" % (
+    print "\t-- left   >> mean: %s, median: %s, p@%s: %s%%" % (
             round(dres['microlmean'], 5), round(dres['microlmedian'], 5),
-            round(dres['microlp@10'], 3))
-    print "\t-- right  >> mean: %s, median: %s, p@10: %s%%" % (
+            n, round(dres['microlr@n'], 3))
+    print "\t-- right  >> mean: %s, median: %s, p@%s: %s%%" % (
             round(dres['micrormean'], 5), round(dres['micrormedian'], 5),
-            round(dres['microrp@10'], 3))
-    print "\t-- global >> mean: %s, median: %s, p@10: %s%%" % (
+            n, round(dres['microrr@n'], 3))
+    print "\t-- global >> mean: %s, median: %s, p@%s: %s%%" % (
             round(dres['microgmean'], 5), round(dres['microgmedian'], 5),
-            round(dres['microgp@10'], 3))
+            n, round(dres['microgr@n'], 3))
 
     listrel = set(idxo)
     dictrelres = {}
@@ -78,9 +78,9 @@ def RankingEval(datapath='data/', dataset='WordNet3.0-test',
     dictrellmedian = {}
     dictrelrmedian = {}
     dictrelgmedian = {}
-    dictrellp10 = {}
-    dictrelrp10 = {}
-    dictrelgp10 = {}
+    dictrellrn = {}
+    dictrelrrn = {}
+    dictrelgrn = {}
 
     for i in listrel:
         dictrelres.update({i: [[], []]})
@@ -98,10 +98,10 @@ def RankingEval(datapath='data/', dataset='WordNet3.0-test',
         dictrellmedian[i] = np.median(dictrelres[i][0])
         dictrelrmedian[i] = np.median(dictrelres[i][1])
         dictrelgmedian[i] = np.median(dictrelres[i][0] + dictrelres[i][1])
-        dictrellp10[i] = np.mean(np.asarray(dictrelres[i][0]) <= 10) * 10.
-        dictrelrp10[i] = np.mean(np.asarray(dictrelres[i][1]) <= 10) * 10.
-        dictrelgp10[i] = np.mean(np.asarray(dictrelres[i][0] +
-                                            dictrelres[i][1]) <= 10) * 10.
+        dictrellrn[i] = np.mean(np.asarray(dictrelres[i][0]) <= n) * 100
+        dictrelrrn[i] = np.mean(np.asarray(dictrelres[i][1]) <= n) * 100
+        dictrelgrn[i] = np.mean(np.asarray(dictrelres[i][0] +
+                                           dictrelres[i][1]) <= n) * 100
 
     dres.update({'dictrelres': dictrelres})
     dres.update({'dictrellmean': dictrellmean})
@@ -110,30 +110,30 @@ def RankingEval(datapath='data/', dataset='WordNet3.0-test',
     dres.update({'dictrellmedian': dictrellmedian})
     dres.update({'dictrelrmedian': dictrelrmedian})
     dres.update({'dictrelgmedian': dictrelgmedian})
-    dres.update({'dictrellp10': dictrellp10})
-    dres.update({'dictrelrp10': dictrelrp10})
-    dres.update({'dictrelgp10': dictrelgp10})
+    dres.update({'dictrellrn': dictrellrn})
+    dres.update({'dictrelrrn': dictrelrrn})
+    dres.update({'dictrelgrn': dictrelgrn})
 
     dres.update({'macrolmean': np.mean(dictrellmean.values())})
     dres.update({'macrolmedian': np.mean(dictrellmedian.values())})
-    dres.update({'macrolp@10': np.mean(dictrellp10.values())})
+    dres.update({'macrolr@n': np.mean(dictrellrn.values())})
     dres.update({'macrormean': np.mean(dictrelrmean.values())})
     dres.update({'macrormedian': np.mean(dictrelrmedian.values())})
-    dres.update({'macrorp@10': np.mean(dictrelrp10.values())})
+    dres.update({'macrorr@n': np.mean(dictrelrrn.values())})
     dres.update({'macrogmean': np.mean(dictrelgmean.values())})
     dres.update({'macrogmedian': np.mean(dictrelgmedian.values())})
-    dres.update({'macrogp@10': np.mean(dictrelgp10.values())})
+    dres.update({'macrogr@n': np.mean(dictrelgrn.values())})
 
     print "### MACRO:"
-    print "\t-- left   >> mean: %s, median: %s, p@10: %s%%" % (
+    print "\t-- left   >> mean: %s, median: %s, r@%s: %s%%" % (
             round(dres['macrolmean'], 5), round(dres['macrolmedian'], 5),
-            round(dres['macrolp@10'], 3))
-    print "\t-- right  >> mean: %s, median: %s, p@10: %s%%" % (
+            n, round(dres['macrolr@n'], 3))
+    print "\t-- right  >> mean: %s, median: %s, r@%s: %s%%" % (
             round(dres['macrormean'], 5), round(dres['macrormedian'], 5),
-            round(dres['macrorp@10'], 3))
-    print "\t-- global >> mean: %s, median: %s, p@10: %s%%" % (
+            n, round(dres['macrorr@n'], 3))
+    print "\t-- global >> mean: %s, median: %s, r@%s: %s%%" % (
             round(dres['macrogmean'], 5), round(dres['macrogmedian'], 5),
-            round(dres['macrogp@10'], 3))
+            n, round(dres['macrogr@n'], 3))
 
     idx2lemme = cPickle.load(open('data/idx2lemme.pkl'))
     offset = 0
@@ -142,18 +142,77 @@ def RankingEval(datapath='data/', dataset='WordNet3.0-test',
         offset = l.shape[0] - embeddings[1].N
     for i in np.sort(list(listrel)):
         print "### RELATION %s:" % idx2lemme[offset + i]
-        print "\t-- left   >> mean: %s, median: %s, p@10: %s%%, N: %s" % (
+        print "\t-- left   >> mean: %s, median: %s, r@%s: %s%%, N: %s" % (
                 round(dictrellmean[i], 5), round(dictrellmedian[i], 5),
-                round(dictrellp10[i], 3), len(dictrelres[i][0]))
-        print "\t-- right  >> mean: %s, median: %s, p@10: %s%%, N: %s" % (
+                n, round(dictrellrn[i], 3), len(dictrelres[i][0]))
+        print "\t-- right  >> mean: %s, median: %s, r@%s: %s%%, N: %s" % (
                 round(dictrelrmean[i], 5), round(dictrelrmedian[i], 5),
-                round(dictrelrp10[i], 3), len(dictrelres[i][1]))
-        print "\t-- global >> mean: %s, median: %s, p@10: %s%%, N: %s" % (
+                n, round(dictrelrrn[i], 3), len(dictrelres[i][1]))
+        print "\t-- global >> mean: %s, median: %s, r@%s: %s%%, N: %s" % (
                 round(dictrelgmean[i], 5), round(dictrelgmedian[i], 5),
-                round(dictrelgp10[i], 3),
+                n, round(dictrelgrn[i], 3),
                 len(dictrelres[i][0] + dictrelres[i][1]))
 
     return dres
 
+def ClassifEval(datapath='data/', validset='WordNet3.0-valid', 
+        testset='WordNet3.0-test', loadmodel='best_valid_model.pkl', seed=647):
+
+    # Load model
+    f = open(loadmodel)
+    embeddings = cPickle.load(f)
+    leftop = cPickle.load(f)
+    rightop = cPickle.load(f)
+    simfn = cPickle.load(f)
+    f.close()
+
+    np.random.seed(seed)
+
+    # Load data
+    lv = load_file(datapath + validset + '-lhs.pkl')
+    lvn = lv[:,np.random.permutation(lv.shape[1])]
+    rv = load_file(datapath + validset + '-rhs.pkl')
+    rvn = rv[:,np.random.permutation(lv.shape[1])]
+    ov = load_file(datapath + validset + '-rel.pkl')
+    ovn = ov[:,np.random.permutation(lv.shape[1])]
+    if type(embeddings) is list:
+        ov = ov[-embeddings[1].N:, :]
+        ovn = ovn[-embeddings[1].N:, :]
+
+    # Load data
+    lt = load_file(datapath + testset + '-lhs.pkl')
+    ltn = lv[:, np.random.permutation(lv.shape[1])]
+    rt = load_file(datapath + testset + '-rhs.pkl')
+    rtn = rv[:, np.random.permutation(lv.shape[1])]
+    ot = load_file(datapath + testset + '-rel.pkl')
+    otn = ov[:, np.random.permutation(lv.shape[1])]
+    if type(embeddings) is list:
+        ot = ot[-embeddings[1].N:, :]
+        otn = otn[-embeddings[1].N:, :]
+
+    simfunc = SimFn(simfn, embeddings, leftop, rightop)
+
+    resv = simfunc(lv, rv, ov)[0]
+    resvn = simfunc(lvn, rvn, ovn)[0]
+    rest = simfunc(lt, rt, ot)[0]
+    restn = simfunc(ltn, rtn, otn)[0]
+    
+    # Threshold  
+    perf = 0
+    T = 0
+    for val in list(np.concatenate([resv,resvn])):
+        tmpperf = (resv > val).sum() + (resvn <= val).sum()
+        if tmpperf > perf:
+            perf = tmpperf
+            T = val
+    testperf = ((rest > T).sum() + (restn <= T).sum()) / float(2 * len(rest))
+    print "### Classification performance : %s%%"%round(testperf * 100, 3)
+
+    return testperf
+
+
+
+
 if __name__ == '__main__':
+    ClassifEval()
     RankingEval()
