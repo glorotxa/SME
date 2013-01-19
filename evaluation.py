@@ -155,7 +155,8 @@ def RankingEval(datapath='data/', dataset='WordNet3.0-test',
 
     return dres
 
-def ClassifEval(datapath='data/', validset='WordNet3.0-valid', 
+
+def ClassifEval(datapath='data/', validset='WordNet3.0-valid',
         testset='WordNet3.0-test', loadmodel='best_valid_model.pkl', seed=647):
 
     # Load model
@@ -170,11 +171,11 @@ def ClassifEval(datapath='data/', validset='WordNet3.0-valid',
 
     # Load data
     lv = load_file(datapath + validset + '-lhs.pkl')
-    lvn = lv[:,np.random.permutation(lv.shape[1])]
+    lvn = lv[:, np.random.permutation(lv.shape[1])]
     rv = load_file(datapath + validset + '-rhs.pkl')
-    rvn = rv[:,np.random.permutation(lv.shape[1])]
+    rvn = rv[:, np.random.permutation(lv.shape[1])]
     ov = load_file(datapath + validset + '-rel.pkl')
-    ovn = ov[:,np.random.permutation(lv.shape[1])]
+    ovn = ov[:, np.random.permutation(lv.shape[1])]
     if type(embeddings) is list:
         ov = ov[-embeddings[1].N:, :]
         ovn = ovn[-embeddings[1].N:, :]
@@ -196,21 +197,19 @@ def ClassifEval(datapath='data/', validset='WordNet3.0-valid',
     resvn = simfunc(lvn, rvn, ovn)[0]
     rest = simfunc(lt, rt, ot)[0]
     restn = simfunc(ltn, rtn, otn)[0]
-    
-    # Threshold  
+
+    # Threshold
     perf = 0
     T = 0
-    for val in list(np.concatenate([resv,resvn])):
+    for val in list(np.concatenate([resv, resvn])):
         tmpperf = (resv > val).sum() + (resvn <= val).sum()
         if tmpperf > perf:
             perf = tmpperf
             T = val
     testperf = ((rest > T).sum() + (restn <= T).sum()) / float(2 * len(rest))
-    print "### Classification performance : %s%%"%round(testperf * 100, 3)
+    print "### Classification performance : %s%%" % round(testperf * 100, 3)
 
     return testperf
-
-
 
 
 if __name__ == '__main__':
