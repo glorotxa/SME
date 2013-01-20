@@ -4,7 +4,10 @@ import cPickle
 import numpy as np
 import scipy.sparse as sp
 
-datapath = '/home/glx/Data/WN/'
+# Put the wordnet-mlj data absolute path here
+datapath = None
+assert datapath is not None
+
 if 'data' not in os.listdir('.'):
     os.mkdir('data')
 
@@ -175,6 +178,8 @@ f = open('data/concept2synset.pkl', 'w')
 cPickle.dump(concept2synset, f, -1)
 f.close()
 
+##################################################
+### Dataset creation
 
 def parseline(line):
     lhs, rel, rhs = line.split('\t')
@@ -182,7 +187,6 @@ def parseline(line):
     rhs = rhs.split(' ')
     rel = rel.split(' ')
     return lhs, rel, rhs
-
 
 np.random.seed(753)
 
@@ -195,7 +199,7 @@ for options in ['normal', 'bridge', 'ambiguated']:
         f = open(datapath + 'wordnet-mlj12-%s.txt' % datatyp, 'r')
         dat = f.readlines()
         f.close()
-
+        # Count the number of examples
         ct = 0
         for i in dat:
             lhs, rel, rhs = parseline(i[:-1])
@@ -209,12 +213,14 @@ for options in ['normal', 'bridge', 'ambiguated']:
                     if len(lemme2synset[j]) != 1:
                         ct += 1
         print options, datatyp, np.max(lemme2idx.values()) + 1, ct
+        # Declare the dataset variables
         inpl = sp.lil_matrix((np.max(lemme2idx.values()) + 1, ct),
                 dtype='float32')
         inpr = sp.lil_matrix((np.max(lemme2idx.values()) + 1, ct),
                 dtype='float32')
         inpo = sp.lil_matrix((np.max(lemme2idx.values()) + 1, ct),
                 dtype='float32')
+        # Fill the sparse matrices
         ct = 0
         for i in dat:
             lhs, rel, rhs = parseline(i[:-1])
@@ -245,6 +251,7 @@ for options in ['normal', 'bridge', 'ambiguated']:
                 inpr[tmpidx, ct] = 1
                 inpo[lemme2idx[rel[0]], ct] = 1
                 ct += 1
+        # Save the datasets
         if 'data' not in os.listdir('.'):
             os.mkdir('data')
         if options == 'normal':
