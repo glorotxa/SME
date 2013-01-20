@@ -3,8 +3,18 @@
 from model import *
 
 
-# Utils -------------------------------------------
+# Utils ----------------------------------------------------------------------
 def create_random_mat(shape, listidx=None):
+    """
+    This function create a random sparse index matrix with a given shape. It
+    is usefull to create negative triplets
+    
+    :param shape: shape of the desired sparse matrix
+    :param listidx: list of index to sample from (default None: it samples from
+                    all shape[0] indexes)
+
+    :note: if shape[1] > shape[0], it loops over the shape[0] indexes.
+    """
     if listidx is None:
         listidx = np.arange(shape[0])
     listidx = listidx[np.random.permutation(len(listidx))]
@@ -30,6 +40,8 @@ def convert2idx(spmat):
 
 
 class DD(dict):
+    """ This class is only used to replace a state variable of Jobman"""
+    
     def __getattr__(self, attr):
         if attr == '__getstate__':
             return super(DD, self).__getstate__
@@ -40,7 +52,6 @@ class DD(dict):
         return self[attr]
 
     def __setattr__(self, attr, value):
-        # Safety check to ensure consistent behavior with __getattr__.
         assert attr not in ('__getstate__', '__setstate__', '__slots__')
         self[attr] = value
 
@@ -56,10 +67,10 @@ class DD(dict):
             z[k] = copy.deepcopy(kv, memo)
         return z
 
-# -------------------------------------------------
+# ----------------------------------------------------------------------------
 
 
-# Experiment function -------------------------------
+# Experiment function --------------------------------------------------------
 def WNexp(state, channel):
 
     # Show experiment parameters
@@ -183,16 +194,19 @@ def WNexp(state, channel):
             tmpo = traino[:, i * batchsize:(i + 1) * batchsize]
             tmpnl = trainln[:, i * batchsize:(i + 1) * batchsize]
             tmpnr = trainrn[:, i * batchsize:(i + 1) * batchsize]
+            # training iteration
             outtmp = trainfunc(state.lremb, state.lrparam / float(batchsize),
                     tmpl, tmpr, tmpo, tmpnl, tmpnr)
             out += [outtmp[0] / float(batchsize)]
             outb += [outtmp[1]]
+            # embeddings normalization
             if type(embeddings) is list:
                 embeddings[0].normalize()
             else:
                 embeddings.normalize()
 
         if (epoch_count % state.test_all) == 0:
+            # model evaluation
             print >> sys.stderr, "-- EPOCH %s (%s seconds per epoch):" % (
                     epoch_count,
                     round(time.time() - timeref, 3) / float(state.test_all))
@@ -217,7 +231,7 @@ def WNexp(state, channel):
                 state.besttrain = state.train
                 state.besttest = np.mean(restest[0] + restest[1])
                 state.bestepoch = epoch_count
-                # Save model
+                # Save model best valid model
                 f = open(state.savepath + '/best_valid_model.pkl', 'w')
                 cPickle.dump(embeddings, f, -1)
                 cPickle.dump(leftop, f, -1)
@@ -226,7 +240,7 @@ def WNexp(state, channel):
                 f.close()
                 print >> sys.stderr, "\t\t##### NEW BEST VALID >> test: %s" % (
                         state.besttest)
-            # Save model
+            # Save current model
             f = open(state.savepath + '/current_model.pkl', 'w')
             cPickle.dump(embeddings, f, -1)
             cPickle.dump(leftop, f, -1)
