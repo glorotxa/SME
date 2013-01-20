@@ -182,11 +182,11 @@ def ClassifEval(datapath='data/', validset='WordNet3.0-valid',
 
     # Load data
     lt = load_file(datapath + testset + '-lhs.pkl')
-    ltn = lv[:, np.random.permutation(lv.shape[1])]
+    ltn = lt[:, np.random.permutation(lv.shape[1])]
     rt = load_file(datapath + testset + '-rhs.pkl')
-    rtn = rv[:, np.random.permutation(lv.shape[1])]
+    rtn = rt[:, np.random.permutation(lv.shape[1])]
     ot = load_file(datapath + testset + '-rel.pkl')
-    otn = ov[:, np.random.permutation(lv.shape[1])]
+    otn = ot[:, np.random.permutation(lv.shape[1])]
     if type(embeddings) is list:
         ot = ot[-embeddings[1].N:, :]
         otn = otn[-embeddings[1].N:, :]
