@@ -8,7 +8,7 @@ def create_random_mat(shape, listidx=None):
     """
     This function create a random sparse index matrix with a given shape. It
     is usefull to create negative triplets
-    
+
     :param shape: shape of the desired sparse matrix
     :param listidx: list of index to sample from (default None: it samples from
                     all shape[0] indexes)
@@ -41,7 +41,7 @@ def convert2idx(spmat):
 
 class DD(dict):
     """ This class is only used to replace a state variable of Jobman"""
-    
+
     def __getattr__(self, attr):
         if attr == '__getstate__':
             return super(DD, self).__getstate__
