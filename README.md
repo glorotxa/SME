@@ -21,6 +21,8 @@ Please refers to the following link for more details:
 - evaluation.py : contains evaluation functions.
 - {experiment_name}_{model_name}.py : runs the best hyperparameters experiment
                                       for a given dataset and a given model.
+- {experiment_name}_test.py : perform quick runs for small models of all types
+                              to test the scripts.
 
 
 2. 3rd Party Libraries
