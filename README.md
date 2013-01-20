@@ -26,7 +26,7 @@ Please refers to the following link for more details:
 2. 3rd Party Libraries
 -----------------------------------------------------------------
 
-You need to install Theano to use those script. It also requires:
+You need to install Theano to use those scripts. It also requires:
 Python >= 2.4, Numpy >=1.5.0, Scipy>=0.8.
 
 
