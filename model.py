@@ -1031,13 +1031,6 @@ def RankingScore(sl, sr, so, inpl, inpr, inpo):
     return errr, errl, erro
 
 
-# The same : Similar but works with sparse index matrices (inpl,inpr,inpo) =
-# (lhs,rhs,rel) AND replace only ONE word per member (does ALL combinations) sl
-# build with SimilarityFunctionleftl (with the adding argument = True) sr build
-# with SimilarityFunctionrightl (with the adding argument = True) so build with
-# SimilarityFunctionrell (with the adding argument = True) But compares with
-# the index correspondance sparse matrices: (inplc,inprc,inpoc) (you give
-# lemmas in input and find the ranking of synsets).
 def RankingScoreWSD(sl, sr, so, inpl, inpr, inpo, inplc, inprc, inpoc):
     """
     This function computes the rank list of the lhs, rhs and relation, with
