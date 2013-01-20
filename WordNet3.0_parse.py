@@ -178,9 +178,9 @@ f = open('data/concept2synset.pkl', 'w')
 cPickle.dump(concept2synset, f, -1)
 f.close()
 
+
 ##################################################
 ### Dataset creation
-
 def parseline(line):
     lhs, rel, rhs = line.split('\t')
     lhs = lhs.split(' ')
