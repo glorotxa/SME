@@ -9,13 +9,13 @@ of the Structured Embeddings model (Bordes et al., AAAI 2011) and of the
 Semantic Matching Energy model (Bordes et al., AISTATS 2012) on several
 datasets.
 
-Please refers to the following link for more details: 
-[Bordes et al., AAAI 2011] 
-[Bordes et al., AISTATS 2012]
+Please refers to the following paper for more details: 
+https://www.hds.utc.fr/everest/lib/exe/fetch.php?id=en%3Asmemlj12&cache=cache&media=en:bordes12aistats.pdf
 
 - model.py : contains the classes and functions to create the different model
              and Theano function (training, evaluation...).
-- WordNet3.0_parse.py : preprocess the WordNet data available [here].
+- WordNet3.0_parse.py : parse the WordNet data available at:
+                        https://www.hds.utc.fr/everest/doku.php?id=en:smemlj12.
 - WNexp.py : contains an experiment function to train all the different models
              on the WordNet dataset.
 - evaluation.py : contains evaluation functions.
@@ -44,7 +44,8 @@ Put the script folder in your PYTHONPATH.
 4. Create the data files
 -----------------------------------------------------------------
 
-Put the absolute path of the wordnet-mlj data (downloaded from [here]) at the
+Put the absolute path of the extracted wordnet-mlj data (downloaded from:
+https://www.hds.utc.fr/everest/doku.php?id=en:smemlj12) at the
 beginning of the WordNet3.0_parse.py script and run it.
 
 5. Run and evaluate a model
