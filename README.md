@@ -19,9 +19,10 @@ https://www.hds.utc.fr/everest/lib/exe/fetch.php?id=en%3Asmemlj12&cache=cache&me
 - WNexp.py : contains an experiment function to train all the different models
              on the WordNet dataset.
 - evaluation.py : contains evaluation functions.
-- {experiment_name}_{model_name}.py : runs the best hyperparameters experiment
+- in the WN/ folder:
+-- {experiment_name}_{model_name}.py : runs the best hyperparameters experiment
                                       for a given dataset and a given model.
-- {experiment_name}_test.py : perform quick runs for small models of all types
+-- {experiment_name}_test.py : perform quick runs for small models of all types
                               to test the scripts.
 
 
@@ -45,11 +46,13 @@ Put the script folder in your PYTHONPATH.
 -----------------------------------------------------------------
 
 Put the absolute path of the extracted wordnet-mlj data (downloaded from:
-https://www.hds.utc.fr/everest/doku.php?id=en:smemlj12) at the
-beginning of the WordNet3.0_parse.py script and run it.
+https://www.hds.utc.fr/everest/doku.php?id=en:smemlj12) at the beginning of the
+WordNet3.0_parse.py script and run it (the SME folder has to be your current
+directory).
 
 5. Run and evaluate a model
 -----------------------------------------------------------------
 
-Simply run the corresponding {experiment_name}_{model_name}.py file.
-[Note: the training takes several hours].
+Simply run the corresponding {experiment_name}_{model_name}.py file (the
+SME/WN/ folder has to be your current directory).  [Note: the training takes
+several hours].
