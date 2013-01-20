@@ -9,7 +9,7 @@ of the Structured Embeddings model (Bordes et al., AAAI 2011) and of the
 Semantic Matching Energy model (Bordes et al., AISTATS 2012) on several
 datasets.
 
-Please refers to the following paper for more details: 
+Please refer to the following paper for more details: 
 https://www.hds.utc.fr/everest/lib/exe/fetch.php?id=en%3Asmemlj12&cache=cache&media=en:bordes12aistats.pdf
 
 - model.py : contains the classes and functions to create the different model
