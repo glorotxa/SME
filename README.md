@@ -39,7 +39,7 @@ mandatory.
 Put the script folder in your PYTHONPATH.
 
 
-4. Preprocess the data
+4. Create the data files
 -----------------------------------------------------------------
 
 Put the absolute path of the wordnet-mlj data (downloaded from [here]) at the
