@@ -60,13 +60,13 @@ def RankingEval(datapath='data/', dataset='WordNet3.0-test',
     dres.update({'microgr@n': np.mean(np.asarray(resg) <= n) * 100})
 
     print "### MICRO:"
-    print "\t-- left   >> mean: %s, median: %s, p@%s: %s%%" % (
+    print "\t-- left   >> mean: %s, median: %s, r@%s: %s%%" % (
             round(dres['microlmean'], 5), round(dres['microlmedian'], 5),
             n, round(dres['microlr@n'], 3))
-    print "\t-- right  >> mean: %s, median: %s, p@%s: %s%%" % (
+    print "\t-- right  >> mean: %s, median: %s, r@%s: %s%%" % (
             round(dres['micrormean'], 5), round(dres['micrormedian'], 5),
             n, round(dres['microrr@n'], 3))
-    print "\t-- global >> mean: %s, median: %s, p@%s: %s%%" % (
+    print "\t-- global >> mean: %s, median: %s, r@%s: %s%%" % (
             round(dres['microgmean'], 5), round(dres['microgmedian'], 5),
             n, round(dres['microgr@n'], 3))
 
