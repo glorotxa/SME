@@ -14,7 +14,7 @@ https://www.hds.utc.fr/everest/lib/exe/fetch.php?id=en%3Asmemlj12&cache=cache&me
 
 - model.py : contains the classes and functions to create the different model
              and Theano function (training, evaluation...).
-- WordNet3.0_parse.py : parse the WordNet data available at:
+- WordNet3.0_parse.py : parses the WordNet data available at:
                         https://www.hds.utc.fr/everest/doku.php?id=en:smemlj12.
 - WNexp.py : contains an experiment function to train all the different models
              on the WordNet dataset.
