@@ -163,7 +163,7 @@ class LayerMat(object):
         """
         Constructor.
 
-        :param act: name of the activation function ('lin', 'rect', 'tanh' or 
+        :param act: name of the activation function ('lin', 'rect', 'tanh' or
                     'sigm').
         :param n_inp: input dimension.
         :param n_out: output dimension.
@@ -185,16 +185,17 @@ class LayerMat(object):
         rx = x.reshape((x.shape[0], x.shape[1], 1))
         return self.act((rx * ry).sum(1))
 
+
 class Unstructured(object):
     """
     Class for a layer with two input vectors that performs the linear operator
-    of the 'left member'. 
-    
-    :note: The 'right' member is the relation, therefore this class allows to 
+    of the 'left member'.
+
+    :note: The 'right' member is the relation, therefore this class allows to
     define an unstructured layer (no effect of the relation) in the same
     framework.
     """
-    
+
     def __init__(self):
         """Constructor."""
         self.params = []
@@ -233,9 +234,9 @@ class Embeddings(object):
 
 
 def parse_embeddings(embeddings):
-    """ 
-    Utilitary function to parse the embeddings parameter in a normalized way for
-    the Structured Embedding [Bordes et al., AAAI 2011] and the Semantic
+    """
+    Utilitary function to parse the embeddings parameter in a normalized way
+    for the Structured Embedding [Bordes et al., AAAI 2011] and the Semantic
     Matching Energy [Bordes et al., AISTATS 2012] models.
     """
     if type(embeddings) == list:
@@ -292,7 +293,7 @@ def RankRightFn(fnsim, embeddings, leftop, rightop,
                 subtensorspec=None, adding=False):
     """
     This function returns a Theano function to measure the similarity score of
-    all 'right' entities given couples of 'left' and relation members (as 
+    all 'right' entities given couples of 'left' and relation members (as
     sparse matrices).
 
     :param fnsim: similarity function (on Theano variables).
@@ -305,7 +306,7 @@ def RankRightFn(fnsim, embeddings, leftop, rightop,
                           entities)
     :param adding: if the right member is composed of several entities the
                    function needs to more inputs: we have to add the embedding
-                   value of the other entities (with the appropriate scaling 
+                   value of the other entities (with the appropriate scaling
                    factor to perform the mean pooling).
     """
     embedding, relationl, relationr = parse_embeddings(embeddings)
@@ -320,7 +321,7 @@ def RankRightFn(fnsim, embeddings, leftop, rightop,
     if subtensorspec is None:
         rhs = embedding.E.T
     else:
-        # We compute the score only for a subset of entities 
+        # We compute the score only for a subset of entities
         rhs = embedding.E[:, :subtensorspec].T
     if adding:
         # Add the embeddings of the other entities (mean pooling)
@@ -357,7 +358,7 @@ def RankLeftFn(fnsim, embeddings, leftop, rightop,
                subtensorspec=None, adding=False):
     """
     This function returns a Theano function to measure the similarity score of
-    all 'left' entities given couples of 'right' and relation members (as 
+    all 'left' entities given couples of 'right' and relation members (as
     sparse matrices).
 
     :param fnsim: similarity function (on Theano variables).
@@ -370,7 +371,7 @@ def RankLeftFn(fnsim, embeddings, leftop, rightop,
                           entities)
     :param adding: if the right member is composed of several entities the
                    function needs to more inputs: we have to add the embedding
-                   value of the other entities (with the appropriate scaling 
+                   value of the other entities (with the appropriate scaling
                    factor to perform the mean pooling).
     """
     embedding, relationl, relationr = parse_embeddings(embeddings)
@@ -385,7 +386,7 @@ def RankLeftFn(fnsim, embeddings, leftop, rightop,
     if subtensorspec is None:
         lhs = embedding.E.T
     else:
-        # We compute the score only for a subset of entities 
+        # We compute the score only for a subset of entities
         lhs = embedding.E[:, :subtensorspec].T
     if adding:
         # Add the embeddings of the other entities (mean pooling)
@@ -435,7 +436,7 @@ def RankRelFn(fnsim, embeddings, leftop, rightop,
                           entities)
     :param adding: if the right member is composed of several entities the
                    function needs to more inputs: we have to add the embedding
-                   value of the other entities (with the appropriate scaling 
+                   value of the other entities (with the appropriate scaling
                    factor to perform the mean pooling).
     """
     embedding, relationl, relationr = parse_embeddings(embeddings)
@@ -451,7 +452,7 @@ def RankRelFn(fnsim, embeddings, leftop, rightop,
         rell = relationl.E
         relr = relationr.E
     else:
-        # We compute the score only for a subset of entities 
+        # We compute the score only for a subset of entities
         rell = relationl.E[:, :subtensorspec].T
         relr = relationr.E[:, :subtensorspec].T
     if adding:
@@ -544,7 +545,7 @@ def RankRightFnIdx(fnsim, embeddings, leftop, rightop, subtensorspec=None):
     # Graph
     lhs = (embedding.E[:, idxl]).reshape((1, embedding.D))
     if subtensorspec is not None:
-        # We compute the score only for a subset of entities 
+        # We compute the score only for a subset of entities
         rhs = (embedding.E[:, :subtensorspec]).T
     else:
         rhs = embedding.E.T
@@ -585,7 +586,7 @@ def RankLeftFnIdx(fnsim, embeddings, leftop, rightop, subtensorspec=None):
     idxo = T.iscalar('idxo')
     # Graph
     if subtensorspec is not None:
-        # We compute the score only for a subset of entities 
+        # We compute the score only for a subset of entities
         lhs = (embedding.E[:, :subtensorspec]).T
     else:
         lhs = embedding.E.T
@@ -629,7 +630,7 @@ def RankRelFnIdx(fnsim, embeddings, leftop, rightop, subtensorspec=None):
     lhs = (embedding.E[:, idxl]).reshape((1, embedding.D))
     rhs = (embedding.E[:, idxr]).reshape((1, embedding.D))
     if subtensorspec is not None:
-        # We compute the score only for a subset of entities 
+        # We compute the score only for a subset of entities
         rell = (relationl.E[:, :subtensorspec]).T
         relr = (relationr.E[:, :subtensorspec]).T
     else:
@@ -650,7 +651,7 @@ def RankRelFnIdx(fnsim, embeddings, leftop, rightop, subtensorspec=None):
 
 def TrainFn(fnsim, embeddings, leftop, rightop, marge=1.0):
     """
-    this function returns a theano function to perform a training iteration,
+    This function returns a theano function to perform a training iteration,
     contrasting couples of positive and negative triplets. members are given
     as sparse matrices. for one positive triplet there is one negative
     triplet.
@@ -659,7 +660,7 @@ def TrainFn(fnsim, embeddings, leftop, rightop, marge=1.0):
     :param embeddings: an embeddings instance.
     :param leftop: class for the 'left' operator.
     :param rightop: class for the 'right' operator.
-    :param marge: marge for the cost function.
+    :param marge: marge For the cost function.
     """
     embedding, relationl, relationr = parse_embeddings(embeddings)
     # Inputs
@@ -685,7 +686,7 @@ def TrainFn(fnsim, embeddings, leftop, rightop, marge=1.0):
     relln = S.dot(relationl.E, inpon).T
     relrn = S.dot(relationr.E, inpon).T
     simin = fnsim(leftop(lhsn, relln), rightop(rhsn, relrn))
-    
+
     cost, out = margincost(simi, simin, marge)
     # Parameters gradients
     if hasattr(fnsim, 'params'):
@@ -740,9 +741,9 @@ def TrainFn(fnsim, embeddings, leftop, rightop, marge=1.0):
 
 def ForwardFn(fnsim, embeddings, leftop, rightop, marge=1.0):
     """
-    this function returns a theano function to perform a forward step,
+    This function returns a theano function to perform a forward step,
     contrasting couples of positive and negative triplets. members are given
-    as sparse matrices. for one positive triplet there is one negative
+    as sparse matrices. For one positive triplet there is one negative
     triplet.
 
     :param fnsim: similarity function (on theano variables).
@@ -800,9 +801,24 @@ def ForwardFn(fnsim, embeddings, leftop, rightop, marge=1.0):
 
 
 def TrainFn1Member(fnsim, embeddings, leftop, rightop, marge=1.0, rel=True):
+    """
+    This function returns a theano function to perform a training iteration,
+    contrasting positive and negative triplets. members are given as sparse
+    matrices. For one positive triplet there are two or three (if rel == True)
+    negative triplets. To create a negative triplet we replace only one member
+    at a time.
+
+    :param fnsim: similarity function (on theano variables).
+    :param embeddings: an embeddings instance.
+    :param leftop: class for the 'left' operator.
+    :param rightop: class for the 'right' operator.
+    :param marge: marge for the cost function.
+    :param rel: boolean, if true we also contrast w.r.t. a negative relation
+                member.
+    """
     embedding, relationl, relationr = parse_embeddings(embeddings)
 
-    # inputs
+    # Inputs
     inpr = S.csr_matrix()
     inpl = S.csr_matrix()
     inpo = S.csr_matrix()
@@ -811,7 +827,7 @@ def TrainFn1Member(fnsim, embeddings, leftop, rightop, marge=1.0, rel=True):
     lrparams = T.scalar('lrparams')
     lrembeddings = T.scalar('lrembeddings')
 
-    # graph
+    # Graph
     lhs = S.dot(embedding.E, inpl).T
     rhs = S.dot(embedding.E, inpr).T
     rell = S.dot(relationl.E, inpo).T
@@ -819,15 +835,19 @@ def TrainFn1Member(fnsim, embeddings, leftop, rightop, marge=1.0, rel=True):
     lhsn = S.dot(embedding.E, inpln).T
     rhsn = S.dot(embedding.E, inprn).T
     simi = fnsim(leftop(lhs, rell), rightop(rhs, relr))
+    # Negative 'left' member
     similn = fnsim(leftop(lhsn, rell), rightop(rhs, relr))
+    # Negative 'right' member
     simirn = fnsim(leftop(lhs, rell), rightop(rhsn, relr))
     costl, outl = margincost(simi, similn, marge)
     costr, outr = margincost(simi, simirn, marge)
     cost = costl + costr
     out = T.concatenate([outl, outr])
+    # List of inputs of the function
     list_in = [lrembeddings, lrparams,
             inpl, inpr, inpo, inpln, inprn]
     if rel:
+        # If rel is True, we also consider a negative relation member
         inpon = S.csr_matrix()
         relln = S.dot(relationl.E, inpon).T
         relrn = S.dot(relationr.E, inpon).T
@@ -838,6 +858,7 @@ def TrainFn1Member(fnsim, embeddings, leftop, rightop, marge=1.0, rel=True):
         list_in += [inpon]
 
     if hasattr(fnsim, 'params'):
+        # If the similarity function has some parameters, we update them too.
         gradientsparams = T.grad(cost,
             leftop.params + rightop.params + fnsim.params)
         updates = dict((i, i - lrparams * j) for i, j in zip(
@@ -850,17 +871,58 @@ def TrainFn1Member(fnsim, embeddings, leftop, rightop, marge=1.0, rel=True):
     newE = embedding.E - lrembeddings * gradients_embedding
     updates.update({embedding.E: newE})
     if type(embeddings) == list:
+        # If there are different embeddings for the relation member.
         gradients_embedding = T.grad(cost, relationl.E)
         newE = relationl.E - lrparams * gradients_embedding
         updates.update({relationl.E: newE})
         gradients_embedding = T.grad(cost, relationr.E)
         newE = relationr.E - lrparams * gradients_embedding
         updates.update({relationr.E: newE})
+    """
+    Theano function inputs.
+    :input lrembeddings: learning rate for the embeddings.
+    :input lrparams: learning rate for the parameters.
+    :input inpl: sparse csr matrix representing the indexes of the positive
+                 triplet 'left' member, shape=(#examples,N [Embeddings]).
+    :input inpr: sparse csr matrix representing the indexes of the positive
+                 triplet 'right' member, shape=(#examples,N [Embeddings]).
+    :input inpo: sparse csr matrix representing the indexes of the positive
+                 triplet relation member, shape=(#examples,N [Embeddings]).
+    :input inpln: sparse csr matrix representing the indexes of the negative
+                  triplet 'left' member, shape=(#examples,N [Embeddings]).
+    :input inprn: sparse csr matrix representing the indexes of the negative
+                  triplet 'right' member, shape=(#examples,N [Embeddings]).
+    :opt input inpon: sparse csr matrix representing the indexes of the
+                      negative triplet relation member, shape=(#examples,N
+                      [Embeddings]).
+
+    Theano function output.
+    :output mean(cost): average cost.
+    :output mean(out): ratio of examples for which the margin is violated,
+                       i.e. for which an update occurs.
+    """
     return theano.function(list_in, [T.mean(cost), T.mean(out)],
             updates=updates, on_unused_input='ignore')
 
 
 def ForwardFn1Member(fnsim, embeddings, leftop, rightop, marge=1.0, rel=True):
+    """
+    This function returns a theano function to perform a forward step,
+    contrasting positive and negative triplets. members are given as sparse
+    matrices. For one positive triplet there are two or three (if rel == True)
+    negative triplets. To create a negative triplet we replace only one member
+    at a time.
+
+    :param fnsim: similarity function (on theano variables).
+    :param embeddings: an embeddings instance.
+    :param leftop: class for the 'left' operator.
+    :param rightop: class for the 'right' operator.
+    :param marge: marge for the cost function.
+    :param rel: boolean, if true we also contrast w.r.t. a negative relation
+                member.
+
+    :note: this is useful for W_SABIE [Weston et al., IJCAI 2011]
+    """
     embedding, relationl, relationr = parse_embeddings(embeddings)
 
     # inputs
@@ -893,16 +955,47 @@ def ForwardFn1Member(fnsim, embeddings, leftop, rightop, marge=1.0, rel=True):
         out = T.concatenate([outl, outr, outo])
         list_in += [inpon]
         list_out += [outo]
+    """
+    Theano function inputs.
+    :input inpl: sparse csr matrix representing the indexes of the positive
+                 triplet 'left' member, shape=(#examples,N [Embeddings]).
+    :input inpr: sparse csr matrix representing the indexes of the positive
+                 triplet 'right' member, shape=(#examples,N [Embeddings]).
+    :input inpo: sparse csr matrix representing the indexes of the positive
+                 triplet relation member, shape=(#examples,N [Embeddings]).
+    :input inpln: sparse csr matrix representing the indexes of the negative
+                  triplet 'left' member, shape=(#examples,N [Embeddings]).
+    :input inprn: sparse csr matrix representing the indexes of the negative
+                  triplet 'right' member, shape=(#examples,N [Embeddings]).
+    :opt input inpon: sparse csr matrix representing the indexes of the
+                      negative triplet relation member, shape=(#examples,N
+                      [Embeddings]).
+
+    Theano function output.
+    :output outl: binary vector representing when the margin is violated, i.e.
+                  when an update occurs, for the 'left' member.
+    :output outr: binary vector representing when the margin is violated, i.e.
+                  when an update occurs, for the 'right' member.
+    :opt output outo: binary vector representing when the margin is violated,
+                  i.e. when an update occurs, for the relation member.
+    """
     return theano.function(list_in, list_out, on_unused_input='ignore')
 
 
-# Compute the rank list of the lhs and rhs, over a list of lhs, rhs and rel
-# indexes.  Only works when there is one word per member (WordNet) sl build
-# with RankLeftFnIdx sr build with RankRightFnIdx
-def RankingScoreIdx(sl, sr, idxtl, idxtr, idxto):
+def RankingScoreIdx(sl, sr, idxl, idxr, idxo):
+    """
+    This function computes the rank list of the lhs and rhs, over a list of
+    lhs, rhs and rel indexes.
+
+    :param sl: Theano function created with RankLeftFnIdx().
+    :param sr: Theano function created with RankRightFnIdx().
+    :param idxl: list of 'left' indices.
+    :param idxr: list of 'right' indices.
+    :param idxo: list of relation indices.
+    """
     errl = []
     errr = []
-    for l, o, r in zip(idxtl, idxto, idxtr):
+    for l, o, r in zip(idxl, idxo, idxr):
         errl += [np.argsort(np.argsort((
             sl(r, o)[0]).flatten())[::-1]).flatten()[l] + 1]
         errr += [np.argsort(np.argsort((
@@ -910,61 +1003,87 @@ def RankingScoreIdx(sl, sr, idxtl, idxtr, idxto):
     return errl, errr
 
 
-# Similar but works with sparse index matrices (posl,posr,poso) = (lhs,rhs,rel)
-# replace the whole member by one word.  sl build with RankLeftFnIdx sr build
-# with RankRightFnIdx so build with RankRelFnIdx
-def RankingScore(sl, sr, so, posl, posr, poso):
+def RankingScore(sl, sr, so, inpl, inpr, inpo):
+    """
+    This function computes the rank list of the lhs, rhs and relation, with
+    members given as sparse index matrices.
+
+    :param sl: Theano function created with RankLeftFn().
+    :param sr: Theano function created with RankRightFn().
+    :param so: Theano function created with RankRelFn().
+    :param inpl: sparse index matrix for the 'left' member.
+    :param inpr: sparse index matrix for the 'right' member.
+    :param inpo: sparse index matrix for the relation member.
+    """
     errl = []
     errr = []
     erro = []
-    for i in range(posl.shape[1]):
-        rankl = np.argsort((sl(posr[:, i], poso[:, i])[0]).flatten())
-        for l in posl[:, i].nonzero()[0]:
+    for i in range(inpl.shape[1]):
+        rankl = np.argsort((sl(inpr[:, i], inpo[:, i])[0]).flatten())
+        for l in inpl[:, i].nonzero()[0]:
             errl += [np.argsort(rankl[::-1]).flatten()[l] + 1]
-        rankr = np.argsort((sr(posl[:, i], poso[:, i])[0]).flatten())
-        for r in posr[:, i].nonzero()[0]:
+        rankr = np.argsort((sr(inpl[:, i], inpo[:, i])[0]).flatten())
+        for r in inpr[:, i].nonzero()[0]:
             errr += [np.argsort(rankr[::-1]).flatten()[r] + 1]
-        ranko = np.argsort((so(posl[:, i], posr[:, i])[0]).flatten())
-        for o in poso[:, i].nonzero()[0]:
+        ranko = np.argsort((so(inpl[:, i], inpr[:, i])[0]).flatten())
+        for o in inpo[:, i].nonzero()[0]:
             erro += [np.argsort(ranko[::-1]).flatten()[o] + 1]
     return errr, errl, erro
 
 
-# The same : Similar but works with sparse index matrices (posl,posr,poso) =
+# The same : Similar but works with sparse index matrices (inpl,inpr,inpo) =
 # (lhs,rhs,rel) AND replace only ONE word per member (does ALL combinations) sl
 # build with SimilarityFunctionleftl (with the adding argument = True) sr build
 # with SimilarityFunctionrightl (with the adding argument = True) so build with
 # SimilarityFunctionrell (with the adding argument = True) But compares with
-# the index correspondance sparse matrices: (poslc,posrc,posoc) (you give
+# the index correspondance sparse matrices: (inplc,inprc,inpoc) (you give
 # lemmas in input and find the ranking of synsets).
-def RankingScoreWSD(sl, sr, so, posl, posr, poso, poslc, posrc, posoc):
+def RankingScoreWSD(sl, sr, so, inpl, inpr, inpo, inplc, inprc, inpoc):
+    """
+    This function computes the rank list of the lhs, rhs and relation, with
+    members given as sparse index matrices. It replace only one word per
+    member and does all combinations.
+
+    :param sl: Theano function created with RankLeftFn() with adding == True.
+    :param sr: Theano function created with RankRightFn() with adding == True.
+    :param so: Theano function created with RankRelFn() with adding == True.
+    :param inpl: sparse index matrix for the 'left' member.
+    :param inpr: sparse index matrix for the 'right' member.
+    :param inpo: sparse index matrix for the relation member.
+    :param inplc: sparse matrix with the true 'left' member index
+                  correspondance.
+    :param inprc: sparse matrix with the true 'right' member index
+                  correspondance.
+    :param inpoc: sparse matrix with the true relation member index
+                  correspondance.
+    """
     errl = []
     errr = []
     erro = []
-    for i in range(posl.shape[1]):
-        lnz = posl[:, i].nonzero()[0]
+    for i in range(inpl.shape[1]):
+        lnz = inpl[:, i].nonzero()[0]
         for j in lnz:
-            val = posl[j, i]
-            tmpadd = copy.deepcopy(posl[:, i])
+            val = inpl[j, i]
+            tmpadd = copy.deepcopy(inpl[:, i])
             tmpadd[j, 0] = 0.0
-            rankl = np.argsort((sl(posr[:, i], poso[:, i],
+            rankl = np.argsort((sl(inpr[:, i], inpo[:, i],
                                       tmpadd, val)[0]).flatten())
-            errl += [np.argsort(rankl[::-1]).flatten()[poslc[j, i]] + 1]
-        rnz = posr[:, i].nonzero()[0]
+            errl += [np.argsort(rankl[::-1]).flatten()[inplc[j, i]] + 1]
+        rnz = inpr[:, i].nonzero()[0]
         for j in rnz:
-            val = posr[j, i]
-            tmpadd = copy.deepcopy(posr[:, i])
+            val = inpr[j, i]
+            tmpadd = copy.deepcopy(inpr[:, i])
             tmpadd[j, 0] = 0.0
-            rankr = np.argsort((sr(posl[:, i], poso[:, i],
+            rankr = np.argsort((sr(inpl[:, i], inpo[:, i],
                                       tmpadd, val)[0]).flatten())
-            errr += [np.argsort(rankr[::-1]).flatten()[posrc[j, i]] + 1]
-        onz = poso[:, i].nonzero()[0]
+            errr += [np.argsort(rankr[::-1]).flatten()[inprc[j, i]] + 1]
+        onz = inpo[:, i].nonzero()[0]
         for j in onz:
-            val = poso[j, i]
-            tmpadd = copy.deepcopy(poso[:, i])
+            val = inpo[j, i]
+            tmpadd = copy.deepcopy(inpo[:, i])
             tmpadd[j, 0] = 0.0
-            ranko = np.argsort((so(posl[:, i], posr[:, i],
+            ranko = np.argsort((so(inpl[:, i], inpr[:, i],
                                       tmpadd, val)[0]).flatten())
-            erro += [np.argsort(ranko[::-1]).flatten()[posoc[j, i]] + 1]
+            erro += [np.argsort(ranko[::-1]).flatten()[inpoc[j, i]] + 1]
     return errl, errr, erro
 # ----------------------------------------------------------------------------
