@@ -285,6 +285,8 @@ def launch(datapath='data/', dataset='WordNet3.0', Nent=52165,
     state.seed = seed
     state.savepath = savepath
 
+    if not os.path.isdir(state.savepath):
+        os.mkdir(state.savepath)
     # Jobman channel remplacement
     class Channel(object):
         def __init__(self, state):
@@ -292,6 +294,7 @@ def launch(datapath='data/', dataset='WordNet3.0', Nent=52165,
             f = open(self.state.savepath + '/orig_state.pkl', 'w')
             cPickle.dump(self.state, f, -1)
             f.close()
+            self.COMPLETE = 1
 
         def save(self):
             f = open(self.state.savepath + '/current_state.pkl', 'w')
