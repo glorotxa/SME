@@ -29,6 +29,9 @@ Please refers to the following link for more details:
 You need to install Theano to use those scripts. It also requires:
 Python >= 2.4, Numpy >=1.5.0, Scipy>=0.8.
 
+The experiment scripts are compatible with Jobman but this library is not
+mandatory.
+
 
 3. Installation
 -----------------------------------------------------------------
