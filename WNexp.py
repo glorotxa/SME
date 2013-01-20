@@ -7,11 +7,11 @@ from model import *
 def create_random_mat(shape, listidx=None):
     """
     This function create a random sparse index matrix with a given shape. It
-    is usefull to create negative triplets
+    is useful to create negative triplets.
 
-    :param shape: shape of the desired sparse matrix
+    :param shape: shape of the desired sparse matrix.
     :param listidx: list of index to sample from (default None: it samples from
-                    all shape[0] indexes)
+                    all shape[0] indexes).
 
     :note: if shape[1] > shape[0], it loops over the shape[0] indexes.
     """
