@@ -40,7 +40,7 @@ def convert2idx(spmat):
 
 
 class DD(dict):
-    """ This class is only used to replace a state variable of Jobman"""
+    """This class is only used to replace a state variable of Jobman"""
 
     def __getattr__(self, attr):
         if attr == '__getstate__':
