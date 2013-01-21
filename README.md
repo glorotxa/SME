@@ -20,10 +20,14 @@ https://www.hds.utc.fr/everest/lib/exe/fetch.php?id=en%3Asmemlj12&cache=cache&me
              on the WordNet dataset.
 - evaluation.py : contains evaluation functions.
 - in the WN/ folder:
-	* {experiment_name}_{model_name}.py : runs the best hyperparameters experiment
-                                      for a given dataset and a given model.
-	* {experiment_name}_test.py : perform quick runs for small models of all types
-                              to test the scripts.
+	* {experiment_name}_{model_name}.py : runs the best hyperparameters
+					      experiment for a given dataset
+                                              and a given model.
+	* {experiment_name}_{model_name}.out : output of the best
+					       hyperparameters experiment for a
+					       given dataset and a given model.
+	* {experiment_name}_test.py : perform quick runs for small models of
+	                              all types to test the scripts.
 
 
 2. 3rd Party Libraries
