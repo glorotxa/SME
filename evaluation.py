@@ -13,8 +13,8 @@ def convert2idx(spmat):
     return rows[np.argsort(cols)]
 
 
-def RankingEval(datapath='data/', dataset='WordNet3.0-test',
-        loadmodel='best_valid_model.pkl', neval='all', Nsyn=40989, n=100):
+def RankingEval(datapath='data/', dataset='WordNet-mlj12-test',
+        loadmodel='best_valid_model.pkl', neval='all', Nsyn=40943, n=100):
 
     # Load model
     f = open(loadmodel)
@@ -135,13 +135,13 @@ def RankingEval(datapath='data/', dataset='WordNet3.0-test',
             round(dres['macrogmean'], 5), round(dres['macrogmedian'], 5),
             n, round(dres['macrogr@n'], 3))
 
-    idx2lemme = cPickle.load(open('data/idx2lemme.pkl'))
+    idx2synset = cPickle.load(open(datapath + 'idx2synset-WordNet-mlj12.pkl'))
     offset = 0
     if type(embeddings) is list:
         o = o[-embeddings[1].N:, :]
         offset = l.shape[0] - embeddings[1].N
     for i in np.sort(list(listrel)):
-        print "### RELATION %s:" % idx2lemme[offset + i]
+        print "### RELATION %s:" % idx2synset[offset + i]
         print "\t-- left   >> mean: %s, median: %s, r@%s: %s%%, N: %s" % (
                 round(dictrellmean[i], 5), round(dictrellmedian[i], 5),
                 n, round(dictrellrn[i], 3), len(dictrelres[i][0]))
@@ -156,8 +156,8 @@ def RankingEval(datapath='data/', dataset='WordNet3.0-test',
     return dres
 
 
-def ClassifEval(datapath='data/', validset='WordNet3.0-valid',
-        testset='WordNet3.0-test', loadmodel='best_valid_model.pkl', seed=647):
+def ClassifEval(datapath='data/', validset='WordNet-mlj12-valid',
+        testset='WordNet-mlj12-test', loadmodel='best_valid_model.pkl', seed=647):
 
     # Load model
     f = open(loadmodel)
