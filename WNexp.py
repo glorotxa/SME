@@ -255,7 +255,7 @@ def WNexp(state, channel):
     return channel.COMPLETE
 
 
-def launch(datapath='data/', dataset='WordNet-mlj12', Nent=40943,
+def launch(datapath='data/', dataset='WordNet-mlj12', Nent=40961,
         Nsyn=40943, Nrel=18, loadmodel=False, loademb=False, op='Unstructured',
         simfn='Dot', ndim=50, nhid=50, marge=1., lremb=0.1, lrparam=1.,
         nbatches=100, totepochs=2000, test_all=1, neval=50, seed=666,
