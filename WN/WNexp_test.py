@@ -12,7 +12,8 @@ launch(op='SE', simfn='L1', ndim=2, nhid=3, marge=1., lremb=0.01,
 print "\n##### EVALUATION #####\n"
 
 ClassifEval(datapath='../data/', loadmodel='test/best_valid_model.pkl')
-RankingEval(datapath='../data/', loadmodel='test/best_valid_model.pkl', neval=50)
+RankingEval(datapath='../data/', loadmodel='test/best_valid_model.pkl',
+        neval=50)
 
 print "\n----- Unstructured -----\n"
 
@@ -23,7 +24,8 @@ launch(op='Unstructured', simfn='Dot', ndim=2, nhid=3, marge=1., lremb=0.01,
 print "\n##### EVALUATION #####\n"
 
 ClassifEval(datapath='../data/', loadmodel='test/best_valid_model.pkl')
-RankingEval(datapath='../data/', loadmodel='test/best_valid_model.pkl', neval=50)
+RankingEval(datapath='../data/', loadmodel='test/best_valid_model.pkl',
+        neval=50)
 
 print "\n----- SME_lin -----\n"
 
@@ -34,7 +36,8 @@ launch(op='SME_lin', simfn='Dot', ndim=2, nhid=3, marge=1., lremb=0.01,
 print "\n##### EVALUATION #####\n"
 
 ClassifEval(datapath='../data/', loadmodel='test/best_valid_model.pkl')
-RankingEval(datapath='../data/', loadmodel='test/best_valid_model.pkl', neval=50)
+RankingEval(datapath='../data/', loadmodel='test/best_valid_model.pkl',
+        neval=50)
 
 print "\n----- SME_bil -----\n"
 
@@ -45,4 +48,5 @@ launch(op='SME_bil', simfn='Dot', ndim=2, nhid=3, marge=1., lremb=0.01,
 print "\n##### EVALUATION #####\n"
 
 ClassifEval(datapath='../data/', loadmodel='test/best_valid_model.pkl')
-RankingEval(datapath='../data/', loadmodel='test/best_valid_model.pkl', neval=50)
+RankingEval(datapath='../data/', loadmodel='test/best_valid_model.pkl',
+        neval=50)
