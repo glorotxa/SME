@@ -5,7 +5,7 @@ import numpy as np
 import scipy.sparse as sp
 
 # Put the wordnet-mlj data absolute path here
-datapath = "/home/glx/Data/WN/"
+datapath = None
 assert datapath is not None
 
 if 'data' not in os.listdir('.'):
