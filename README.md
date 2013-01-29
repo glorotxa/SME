@@ -14,7 +14,7 @@ https://www.hds.utc.fr/everest/lib/exe/fetch.php?id=en%3Asmemlj12&cache=cache&me
 
 - model.py : contains the classes and functions to create the different model
              and Theano function (training, evaluation...).
-- WordNet3.0_parse.py : parses the WordNet data available at:
+- WordNet-mlj12_parse.py : parses the WordNet data available at:
                         https://www.hds.utc.fr/everest/doku.php?id=en:smemlj12.
 - WNexp.py : contains an experiment function to train all the different models
              on the WordNet dataset.
@@ -51,7 +51,7 @@ Put the script folder in your PYTHONPATH.
 
 Put the absolute path of the extracted wordnet-mlj data (downloaded from:
 https://www.hds.utc.fr/everest/doku.php?id=en:smemlj12) at the beginning of the
-WordNet3.0_parse.py script and run it (the SME folder has to be your current
+WordNet-mlj12_parse.py script and run it (the SME folder has to be your current
 directory).
 
 5. Run and evaluate a model
