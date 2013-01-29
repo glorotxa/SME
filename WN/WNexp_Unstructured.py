@@ -10,5 +10,7 @@ launch(op='Unstructured', simfn='Dot', ndim=50, nhid=50, marge=1., lremb=0.1,
 
 print "\n##### EVALUATION #####\n"
 
-ClassifEval(datapath='../data/', loadmodel='WN_Unstructured/best_valid_model.pkl')
-RankingEval(datapath='../data/', loadmodel='WN_Unstructured/best_valid_model.pkl')
+ClassifEval(datapath='../data/',
+        loadmodel='WN_Unstructured/best_valid_model.pkl')
+RankingEval(datapath='../data/',
+        loadmodel='WN_Unstructured/best_valid_model.pkl')
