@@ -157,7 +157,8 @@ def RankingEval(datapath='data/', dataset='WordNet-mlj12-test',
 
 
 def ClassifEval(datapath='data/', validset='WordNet-mlj12-valid',
-        testset='WordNet-mlj12-test', loadmodel='best_valid_model.pkl', seed=647):
+        testset='WordNet-mlj12-test', loadmodel='best_valid_model.pkl',
+        seed=647):
 
     # Load model
     f = open(loadmodel)

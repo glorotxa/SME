@@ -31,7 +31,7 @@ for datatyp in ['train', 'valid', 'test']:
     f = open(datapath + 'wordnet-mlj12-%s.txt' % datatyp, 'r')
     dat = f.readlines()
     f.close()
-    for idx,i in enumerate(dat):
+    for i in dat:
         lhs, rel, rhs = parseline(i[:-1])
         synlist += [lhs[0], rhs[0]]
         rellist += [rel[0]]

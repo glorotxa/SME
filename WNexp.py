@@ -287,6 +287,7 @@ def launch(datapath='data/', dataset='WordNet-mlj12', Nent=40961,
 
     if not os.path.isdir(state.savepath):
         os.mkdir(state.savepath)
+
     # Jobman channel remplacement
     class Channel(object):
         def __init__(self, state):
