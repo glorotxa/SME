@@ -14,7 +14,7 @@ def convert2idx(spmat):
 
 
 def RankingEval(datapath='data/', dataset='WordNet-mlj12-test',
-        loadmodel='best_valid_model.pkl', neval='all', Nsyn=40943, n=100):
+        loadmodel='best_valid_model.pkl', idx2synsetfile='idx2synset-WordNet-mlj12.pkl', neval='all', Nsyn=40943, n=100):
 
     # Load model
     f = open(loadmodel)
@@ -135,7 +135,7 @@ def RankingEval(datapath='data/', dataset='WordNet-mlj12-test',
             round(dres['macrogmean'], 5), round(dres['macrogmedian'], 5),
             n, round(dres['macrogr@n'], 3))
 
-    idx2synset = cPickle.load(open(datapath + 'idx2synset-WordNet-mlj12.pkl'))
+    idx2synset = cPickle.load(open(datapath + idx2synsetfile))
     offset = 0
     if type(embeddings) is list:
         o = o[-embeddings[1].N:, :]

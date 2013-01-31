@@ -5,7 +5,7 @@ import numpy as np
 import scipy.sparse as sp
 
 # Put the wordnet-mlj data absolute path here
-datapath = None
+datapath = '/Users/antoine/Work/data/wordnet-mlj12/'
 assert datapath is not None
 
 if 'data' not in os.listdir('.'):
@@ -48,14 +48,14 @@ for i in synset:
     idx2synset[idx] = i
     idx += 1
 nbsyn = idx
-print "Number of synsets in the dictionnary: ", nbsyn
-# add relations at the end of the dictionnary
+print "Number of synsets in the dictionary: ", nbsyn
+# add relations at the end of the dictionary
 for i in relset:
     synset2idx[i] = idx
     idx2synset[idx] = i
     idx += 1
 nbrel = idx - nbsyn
-print "Number of relations in the dictionnary: ", nbrel
+print "Number of relations in the dictionary: ", nbrel
 
 f = open('data/synset2idx-WordNet-mlj12.pkl', 'w')
 g = open('data/idx2synset-WordNet-mlj12.pkl', 'w')
