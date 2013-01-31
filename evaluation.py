@@ -14,7 +14,8 @@ def convert2idx(spmat):
 
 
 def RankingEval(datapath='data/', dataset='WordNet-mlj12-test',
-        loadmodel='best_valid_model.pkl', idx2synsetfile='idx2synset-WordNet-mlj12.pkl', neval='all', Nsyn=40943, n=100):
+        loadmodel='best_valid_model.pkl', neval='all', Nsyn=40943, n=100,
+        idx2synsetfile='idx2synset-WordNet-mlj12.pkl'):
 
     # Load model
     f = open(loadmodel)
