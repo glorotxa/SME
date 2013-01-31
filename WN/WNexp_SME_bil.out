@@ -1,84 +1,84 @@
 
 ##### EVALUATION #####
 
-### Classification performance : 96.33%
+### Classification performance : 96.62%
 ### MICRO:
-	-- left   >> mean: 509.059, median: 9.0, r@100: 85.06%
-	-- right  >> mean: 510.0172, median: 8.0, r@100: 86.14%
-	-- global >> mean: 509.5381, median: 8.0, r@100: 85.6%
+	-- left   >> mean: 512.961, median: 8.0, r@100: 85.72%
+	-- right  >> mean: 538.8548, median: 7.0, r@100: 86.4%
+	-- global >> mean: 525.9079, median: 8.0, r@100: 86.06%
 ### MACRO:
-	-- left   >> mean: 486.74989, median: 52.0, r@100: 74.23%
-	-- right  >> mean: 618.49343, median: 58.22222, r@100: 73.126%
-	-- global >> mean: 552.62166, median: 31.91667, r@100: 73.678%
-### RELATION _part_of:
-	-- left   >> mean: 419.61818, median: 24.0, r@100: 78.182%, N: 165
-	-- right  >> mean: 377.42424, median: 5.0, r@100: 89.091%, N: 165
-	-- global >> mean: 398.52121, median: 11.0, r@100: 83.636%, N: 330
-### RELATION _derivationally_related_form:
-	-- left   >> mean: 590.92365, median: 8.0, r@100: 89.851%, N: 1074
-	-- right  >> mean: 583.76071, median: 8.0, r@100: 90.317%, N: 1074
-	-- global >> mean: 587.34218, median: 8.0, r@100: 90.084%, N: 2148
-### RELATION _verb_group:
-	-- left   >> mean: 179.38462, median: 25.0, r@100: 82.051%, N: 39
-	-- right  >> mean: 46.79487, median: 17.0, r@100: 87.179%, N: 39
-	-- global >> mean: 113.08974, median: 17.0, r@100: 84.615%, N: 78
-### RELATION _has_part:
-	-- left   >> mean: 218.5407, median: 6.0, r@100: 91.86%, N: 172
-	-- right  >> mean: 311.23837, median: 27.5, r@100: 81.395%, N: 172
-	-- global >> mean: 264.88953, median: 15.5, r@100: 86.628%, N: 344
-### RELATION _synset_domain_usage_of:
-	-- left   >> mean: 338.78571, median: 314.0, r@100: 0.0%, N: 14
-	-- right  >> mean: 48.07143, median: 2.5, r@100: 85.714%, N: 14
-	-- global >> mean: 193.42857, median: 129.5, r@100: 42.857%, N: 28
-### RELATION _instance_hypernym:
-	-- left   >> mean: 219.63934, median: 76.0, r@100: 56.557%, N: 122
-	-- right  >> mean: 95.94262, median: 1.5, r@100: 93.443%, N: 122
-	-- global >> mean: 157.79098, median: 12.0, r@100: 75.0%, N: 244
-### RELATION _member_of_domain_region:
-	-- left   >> mean: 20.46154, median: 1.0, r@100: 88.462%, N: 26
-	-- right  >> mean: 2351.30769, median: 308.0, r@100: 38.462%, N: 26
-	-- global >> mean: 1185.88462, median: 29.0, r@100: 63.462%, N: 52
-### RELATION _instance_hyponym:
-	-- left   >> mean: 81.24074, median: 2.0, r@100: 93.519%, N: 108
-	-- right  >> mean: 300.89815, median: 72.5, r@100: 58.333%, N: 108
-	-- global >> mean: 191.06944, median: 11.5, r@100: 75.926%, N: 216
-### RELATION _member_of_domain_usage:
-	-- left   >> mean: 35.125, median: 2.5, r@100: 95.833%, N: 24
-	-- right  >> mean: 1435.41667, median: 307.0, r@100: 4.167%, N: 24
-	-- global >> mean: 735.27083, median: 101.0, r@100: 50.0%, N: 48
-### RELATION _member_holonym:
-	-- left   >> mean: 343.51439, median: 13.0, r@100: 87.41%, N: 278
-	-- right  >> mean: 271.50719, median: 2.0, r@100: 94.604%, N: 278
-	-- global >> mean: 307.51079, median: 5.0, r@100: 91.007%, N: 556
-### RELATION _similar_to:
-	-- left   >> mean: 93.33333, median: 97.0, r@100: 66.667%, N: 3
-	-- right  >> mean: 117.0, median: 108.0, r@100: 33.333%, N: 3
-	-- global >> mean: 105.16667, median: 102.5, r@100: 50.0%, N: 6
-### RELATION _member_of_domain_topic:
-	-- left   >> mean: 82.08108, median: 2.0, r@100: 92.793%, N: 111
-	-- right  >> mean: 671.27928, median: 82.0, r@100: 54.054%, N: 111
-	-- global >> mean: 376.68018, median: 14.0, r@100: 73.423%, N: 222
-### RELATION _member_meronym:
-	-- left   >> mean: 450.46245, median: 3.0, r@100: 92.885%, N: 253
-	-- right  >> mean: 560.71937, median: 14.0, r@100: 83.399%, N: 253
-	-- global >> mean: 505.59091, median: 6.0, r@100: 88.142%, N: 506
-### RELATION _hypernym:
-	-- left   >> mean: 597.26699, median: 24.0, r@100: 78.497%, N: 1251
-	-- right  >> mean: 356.39009, median: 2.0, r@100: 94.804%, N: 1251
-	-- global >> mean: 476.82854, median: 7.0, r@100: 86.651%, N: 2502
+	-- left   >> mean: 461.84976, median: 49.66667, r@100: 79.097%
+	-- right  >> mean: 559.5168, median: 62.5, r@100: 73.041%
+	-- global >> mean: 510.68328, median: 20.61111, r@100: 76.069%
 ### RELATION _also_see:
-	-- left   >> mean: 1690.14286, median: 71.0, r@100: 55.357%, N: 56
-	-- right  >> mean: 2273.28571, median: 65.0, r@100: 58.929%, N: 56
-	-- global >> mean: 1981.71429, median: 65.0, r@100: 57.143%, N: 112
-### RELATION _synset_domain_region_of:
-	-- left   >> mean: 1829.83784, median: 168.0, r@100: 40.541%, N: 37
-	-- right  >> mean: 63.97297, median: 1.0, r@100: 94.595%, N: 37
-	-- global >> mean: 946.90541, median: 19.0, r@100: 67.568%, N: 74
-### RELATION _synset_domain_topic_of:
-	-- left   >> mean: 1140.30702, median: 97.5, r@100: 51.754%, N: 114
-	-- right  >> mean: 639.59649, median: 2.0, r@100: 94.737%, N: 114
-	-- global >> mean: 889.95175, median: 14.5, r@100: 73.246%, N: 228
+	-- left   >> mean: 1108.44643, median: 80.0, r@100: 53.571%, N: 56
+	-- right  >> mean: 2156.44643, median: 80.5, r@100: 51.786%, N: 56
+	-- global >> mean: 1632.44643, median: 80.0, r@100: 52.679%, N: 112
+### RELATION _derivationally_related_form:
+	-- left   >> mean: 625.36499, median: 8.0, r@100: 90.13%, N: 1074
+	-- right  >> mean: 644.99069, median: 7.0, r@100: 90.968%, N: 1074
+	-- global >> mean: 635.17784, median: 8.0, r@100: 90.549%, N: 2148
+### RELATION _has_part:
+	-- left   >> mean: 446.60465, median: 5.0, r@100: 92.442%, N: 172
+	-- right  >> mean: 543.63372, median: 17.0, r@100: 84.302%, N: 172
+	-- global >> mean: 495.11919, median: 10.0, r@100: 88.372%, N: 344
+### RELATION _hypernym:
+	-- left   >> mean: 594.21423, median: 26.0, r@100: 77.618%, N: 1251
+	-- right  >> mean: 353.1303, median: 2.0, r@100: 95.204%, N: 1251
+	-- global >> mean: 473.67226, median: 7.0, r@100: 86.411%, N: 2502
 ### RELATION _hyponym:
-	-- left   >> mean: 430.83261, median: 2.0, r@100: 93.929%, N: 1153
-	-- right  >> mean: 628.2758, median: 23.0, r@100: 79.705%, N: 1153
-	-- global >> mean: 529.55421, median: 7.0, r@100: 86.817%, N: 2306
+	-- left   >> mean: 407.38768, median: 2.0, r@100: 94.623%, N: 1153
+	-- right  >> mean: 710.11188, median: 24.0, r@100: 79.185%, N: 1153
+	-- global >> mean: 558.74978, median: 7.0, r@100: 86.904%, N: 2306
+### RELATION _instance_hypernym:
+	-- left   >> mean: 216.79508, median: 59.5, r@100: 64.754%, N: 122
+	-- right  >> mean: 36.7623, median: 1.0, r@100: 93.443%, N: 122
+	-- global >> mean: 126.77869, median: 8.0, r@100: 79.098%, N: 244
+### RELATION _instance_hyponym:
+	-- left   >> mean: 15.37963, median: 2.0, r@100: 96.296%, N: 108
+	-- right  >> mean: 194.02778, median: 80.0, r@100: 55.556%, N: 108
+	-- global >> mean: 104.7037, median: 13.0, r@100: 75.926%, N: 216
+### RELATION _member_holonym:
+	-- left   >> mean: 328.67626, median: 14.5, r@100: 86.331%, N: 278
+	-- right  >> mean: 255.42806, median: 3.0, r@100: 93.885%, N: 278
+	-- global >> mean: 292.05216, median: 5.0, r@100: 90.108%, N: 556
+### RELATION _member_meronym:
+	-- left   >> mean: 393.13834, median: 3.0, r@100: 92.095%, N: 253
+	-- right  >> mean: 533.52174, median: 15.0, r@100: 84.98%, N: 253
+	-- global >> mean: 463.33004, median: 7.0, r@100: 88.538%, N: 506
+### RELATION _member_of_domain_region:
+	-- left   >> mean: 100.84615, median: 1.0, r@100: 92.308%, N: 26
+	-- right  >> mean: 1639.84615, median: 344.0, r@100: 30.769%, N: 26
+	-- global >> mean: 870.34615, median: 7.0, r@100: 61.538%, N: 52
+### RELATION _member_of_domain_topic:
+	-- left   >> mean: 212.15315, median: 2.0, r@100: 94.595%, N: 111
+	-- right  >> mean: 744.23423, median: 60.0, r@100: 59.459%, N: 111
+	-- global >> mean: 478.19369, median: 13.0, r@100: 77.027%, N: 222
+### RELATION _member_of_domain_usage:
+	-- left   >> mean: 10.70833, median: 4.5, r@100: 100.0%, N: 24
+	-- right  >> mean: 1148.75, median: 354.5, r@100: 4.167%, N: 24
+	-- global >> mean: 579.72917, median: 66.5, r@100: 52.083%, N: 48
+### RELATION _part_of:
+	-- left   >> mean: 863.69697, median: 19.0, r@100: 85.455%, N: 165
+	-- right  >> mean: 708.89697, median: 4.0, r@100: 93.333%, N: 165
+	-- global >> mean: 786.29697, median: 9.0, r@100: 89.394%, N: 330
+### RELATION _similar_to:
+	-- left   >> mean: 51.0, median: 52.0, r@100: 100.0%, N: 3
+	-- right  >> mean: 108.66667, median: 111.0, r@100: 33.333%, N: 3
+	-- global >> mean: 79.83333, median: 65.0, r@100: 66.667%, N: 6
+### RELATION _synset_domain_region_of:
+	-- left   >> mean: 1545.75676, median: 200.0, r@100: 40.541%, N: 37
+	-- right  >> mean: 29.16216, median: 1.0, r@100: 91.892%, N: 37
+	-- global >> mean: 787.45946, median: 14.0, r@100: 66.216%, N: 74
+### RELATION _synset_domain_topic_of:
+	-- left   >> mean: 703.57018, median: 85.0, r@100: 54.386%, N: 114
+	-- right  >> mean: 186.39474, median: 2.0, r@100: 92.982%, N: 114
+	-- global >> mean: 444.98246, median: 15.0, r@100: 73.684%, N: 228
+### RELATION _synset_domain_usage_of:
+	-- left   >> mean: 445.42857, median: 318.5, r@100: 21.429%, N: 14
+	-- right  >> mean: 4.78571, median: 3.0, r@100: 100.0%, N: 14
+	-- global >> mean: 225.10714, median: 22.5, r@100: 60.714%, N: 28
+### RELATION _verb_group:
+	-- left   >> mean: 244.12821, median: 12.0, r@100: 87.179%, N: 39
+	-- right  >> mean: 72.51282, median: 16.0, r@100: 79.487%, N: 39
+	-- global >> mean: 158.32051, median: 14.0, r@100: 83.333%, N: 78
