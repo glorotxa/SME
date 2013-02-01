@@ -1003,6 +1003,23 @@ def RankingScoreIdx(sl, sr, idxl, idxr, idxo):
     return errl, errr
 
 
+def RankingScoreRightIdx(sr, idxl, idxr, idxo):
+    """
+    This function computes the rank list of the rhs, over a list of lhs, rhs
+    and rel indexes.
+
+    :param sr: Theano function created with RankRightFnIdx().
+    :param idxl: list of 'left' indices.
+    :param idxr: list of 'right' indices.
+    :param idxo: list of relation indices.
+    """
+    errr = []
+    for l, o, r in zip(idxl, idxo, idxr):
+        errr += [np.argsort(np.argsort((
+            sr(l, o)[0]).flatten())[::-1]).flatten()[r] + 1]
+    return errr
+
+
 def RankingScore(sl, sr, so, inpl, inpr, inpo):
     """
     This function computes the rank list of the lhs, rhs and relation, with
