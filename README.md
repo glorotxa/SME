@@ -54,7 +54,7 @@ Put the script folder in your PYTHONPATH.
 * WordNet (WN):
 Put the absolute path of the extracted wordnet-mlj data (downloaded from:
 https://www.hds.utc.fr/everest/doku.php?id=en:smemlj12) at the beginning of the
-WordNet-mlj12_parse.py script and run it (the SME folder has to be your current
+WN_parse.py script and run it (the SME folder has to be your current
 directory).
 
 5. Run and evaluate a model
