@@ -1,7 +1,7 @@
 #! /usr/bin/python
 
-from WNexp import *
-from evaluation import *
+from WN_exp import *
+from WN_evaluation import *
 
 print "\n----- SE -----\n"
 

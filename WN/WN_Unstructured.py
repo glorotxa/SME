@@ -1,7 +1,7 @@
 #! /usr/bin/python
 
-from WNexp import *
-from evaluation import *
+from WN_exp import *
+from WN_evaluation import *
 
 launch(op='Unstructured', simfn='Dot', ndim=50, nhid=50, marge=1., lremb=0.1,
     lrparam=0.1, nbatches=100, totepochs=720, test_all=720,

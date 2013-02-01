@@ -1,7 +1,7 @@
 #! /usr/bin/python
 
-from WNexp import *
-from evaluation import *
+from WN_exp import *
+from WN_evaluation import *
 
 launch(op='SME_lin', simfn='Dot', ndim=50, nhid=50, marge=1., lremb=0.01,
     lrparam=1., nbatches=100, totepochs=950, test_all=950,
