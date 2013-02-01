@@ -5,7 +5,7 @@ import numpy as np
 import scipy.sparse as sp
 
 # Put the freebase_aaai11 data absolute path here
-datapath = '/home/glx/Data/FB/freebase-data-aaai11/' 
+datapath = None 
 assert datapath is not None
 
 if 'data' not in os.listdir('.'):
@@ -28,7 +28,7 @@ entleftlist = []
 entrightlist = []
 rellist = []
 
-for datatyp in ['train', 'valid', 'test']:
+for datatyp in ['train']:
     f = open(datapath + 'freebase_aaai11-%s.txt' % datatyp, 'r')
     dat = f.readlines()
     f.close()
