@@ -1,0 +1,124 @@
+
+----- SE -----
+
+
+##### EVALUATION #####
+
+### Classification performance : 56.25%
+### MICRO:
+	-- right  >> mean: 6408.14, median: 5153.0, r@100: 4.0%
+### MACRO:
+	-- right  >> mean: 5428.42286, median: 5595.4, r@100: 4.762%
+### RELATION /people/deceased_person/cause_of_death:
+	-- right  >> mean: 615.0, median: 615.0, r@100: 0.0%, N: 1
+### RELATION /people/deceased_person/place_of_death:
+	-- right  >> mean: 4712.42857, median: 5222.0, r@100: 14.286%, N: 7
+### RELATION /people/marriage/spouse:
+	-- right  >> mean: 6378.8, median: 5150.0, r@100: 0.0%, N: 5
+### RELATION /people/person/children:
+	-- right  >> mean: 11602.875, median: 12665.0, r@100: 0.0%, N: 8
+### RELATION /people/person/ethnicity:
+	-- right  >> mean: 7739.5, median: 7739.5, r@100: 0.0%, N: 2
+### RELATION /people/person/parents:
+	-- right  >> mean: 9881.66667, median: 12839.0, r@100: 0.0%, N: 3
+### RELATION /people/person/place_of_birth:
+	-- right  >> mean: 5870.16667, median: 5112.0, r@100: 0.0%, N: 12
+### RELATION /people/person/profession:
+	-- right  >> mean: 289.66667, median: 129.0, r@100: 33.333%, N: 3
+### RELATION /people/person/religion:
+	-- right  >> mean: 1700.0, median: 1700.0, r@100: 0.0%, N: 1
+### RELATION /people/place_lived/location:
+	-- right  >> mean: 5494.125, median: 4782.5, r@100: 0.0%, N: 8
+
+----- Unstructured -----
+
+
+##### EVALUATION #####
+
+### Classification performance : 49.813%
+### MICRO:
+	-- right  >> mean: 8323.2, median: 8805.0, r@100: 0.0%
+### MACRO:
+	-- right  >> mean: 9131.90798, median: 9345.65, r@100: 0.0%
+### RELATION /people/deceased_person/cause_of_death:
+	-- right  >> mean: 12552.0, median: 12552.0, r@100: 0.0%, N: 1
+### RELATION /people/deceased_person/place_of_death:
+	-- right  >> mean: 9645.57143, median: 13126.0, r@100: 0.0%, N: 7
+### RELATION /people/marriage/spouse:
+	-- right  >> mean: 10653.8, median: 8842.0, r@100: 0.0%, N: 5
+### RELATION /people/person/children:
+	-- right  >> mean: 5018.125, median: 5292.0, r@100: 0.0%, N: 8
+### RELATION /people/person/ethnicity:
+	-- right  >> mean: 9796.0, median: 9796.0, r@100: 0.0%, N: 2
+### RELATION /people/person/parents:
+	-- right  >> mean: 8590.66667, median: 10227.0, r@100: 0.0%, N: 3
+### RELATION /people/person/place_of_birth:
+	-- right  >> mean: 8543.08333, median: 9129.5, r@100: 0.0%, N: 12
+### RELATION /people/person/profession:
+	-- right  >> mean: 8781.33333, median: 7011.0, r@100: 0.0%, N: 3
+### RELATION /people/person/religion:
+	-- right  >> mean: 10494.0, median: 10494.0, r@100: 0.0%, N: 1
+### RELATION /people/place_lived/location:
+	-- right  >> mean: 7244.5, median: 6987.0, r@100: 0.0%, N: 8
+
+----- SME_lin -----
+
+
+##### EVALUATION #####
+
+### Classification performance : 50.087%
+### MICRO:
+	-- right  >> mean: 6755.08, median: 5222.0, r@100: 0.0%
+### MACRO:
+	-- right  >> mean: 6190.53857, median: 5817.8, r@100: 0.0%
+### RELATION /people/deceased_person/cause_of_death:
+	-- right  >> mean: 2045.0, median: 2045.0, r@100: 0.0%, N: 1
+### RELATION /people/deceased_person/place_of_death:
+	-- right  >> mean: 6509.28571, median: 4771.0, r@100: 0.0%, N: 7
+### RELATION /people/marriage/spouse:
+	-- right  >> mean: 6472.6, median: 3620.0, r@100: 0.0%, N: 5
+### RELATION /people/person/children:
+	-- right  >> mean: 7483.0, median: 6780.0, r@100: 0.0%, N: 8
+### RELATION /people/person/ethnicity:
+	-- right  >> mean: 4759.5, median: 4759.5, r@100: 0.0%, N: 2
+### RELATION /people/person/parents:
+	-- right  >> mean: 9148.0, median: 11834.0, r@100: 0.0%, N: 3
+### RELATION /people/person/place_of_birth:
+	-- right  >> mean: 7694.66667, median: 8119.0, r@100: 0.0%, N: 12
+### RELATION /people/person/profession:
+	-- right  >> mean: 1479.33333, median: 1678.0, r@100: 0.0%, N: 3
+### RELATION /people/person/religion:
+	-- right  >> mean: 9476.0, median: 9476.0, r@100: 0.0%, N: 1
+### RELATION /people/place_lived/location:
+	-- right  >> mean: 6838.0, median: 5095.5, r@100: 0.0%, N: 8
+
+----- SME_bil -----
+
+
+##### EVALUATION #####
+
+### Classification performance : 51.7%
+### MICRO:
+	-- right  >> mean: 6778.62, median: 5738.5, r@100: 2.0%
+### MACRO:
+	-- right  >> mean: 5556.1844, median: 4697.55, r@100: 2.0%
+### RELATION /people/deceased_person/cause_of_death:
+	-- right  >> mean: 1023.0, median: 1023.0, r@100: 0.0%, N: 1
+### RELATION /people/deceased_person/place_of_death:
+	-- right  >> mean: 6962.28571, median: 4379.0, r@100: 0.0%, N: 7
+### RELATION /people/marriage/spouse:
+	-- right  >> mean: 5544.6, median: 3213.0, r@100: 20.0%, N: 5
+### RELATION /people/person/children:
+	-- right  >> mean: 6461.625, median: 4874.0, r@100: 0.0%, N: 8
+### RELATION /people/person/ethnicity:
+	-- right  >> mean: 9277.0, median: 9277.0, r@100: 0.0%, N: 2
+### RELATION /people/person/parents:
+	-- right  >> mean: 4215.0, median: 2798.0, r@100: 0.0%, N: 3
+### RELATION /people/person/place_of_birth:
+	-- right  >> mean: 9021.66667, median: 9042.0, r@100: 0.0%, N: 12
+### RELATION /people/person/profession:
+	-- right  >> mean: 3591.66667, median: 4557.0, r@100: 0.0%, N: 3
+### RELATION /people/person/religion:
+	-- right  >> mean: 2314.0, median: 2314.0, r@100: 0.0%, N: 1
+### RELATION /people/place_lived/location:
+	-- right  >> mean: 7151.0, median: 5498.5, r@100: 0.0%, N: 8
