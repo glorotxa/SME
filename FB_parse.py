@@ -5,7 +5,7 @@ import numpy as np
 import scipy.sparse as sp
 
 # Put the freebase_aaai11 data absolute path here
-datapath = None 
+datapath = None
 assert datapath is not None
 
 if 'data' not in os.listdir('.'):
