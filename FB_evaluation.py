@@ -116,22 +116,22 @@ def ClassifEval(datapath='data/', validset='FB-valid', testset='FB-test',
 
     # Load data
     lv = load_file(datapath + validset + '-lhs.pkl')
-    lvn = lv[:, np.random.permutation(lv.shape[1])]
+    lvn = lv
     rv = load_file(datapath + validset + '-rhs.pkl')
     rvn = rv[:, np.random.permutation(lv.shape[1])]
     ov = load_file(datapath + validset + '-rel.pkl')
-    ovn = ov[:, np.random.permutation(lv.shape[1])]
+    ovn = ov
     if type(embeddings) is list:
         ov = ov[-embeddings[1].N:, :]
         ovn = ovn[-embeddings[1].N:, :]
 
     # Load data
     lt = load_file(datapath + testset + '-lhs.pkl')
-    ltn = lt[:, np.random.permutation(lv.shape[1])]
+    ltn = lt
     rt = load_file(datapath + testset + '-rhs.pkl')
     rtn = rt[:, np.random.permutation(lv.shape[1])]
     ot = load_file(datapath + testset + '-rel.pkl')
-    otn = ot[:, np.random.permutation(lv.shape[1])]
+    otn = ot
     if type(embeddings) is list:
         ot = ot[-embeddings[1].N:, :]
         otn = otn[-embeddings[1].N:, :]
