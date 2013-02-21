@@ -1,3 +1,4 @@
+import os
 import cPickle
 
 import numpy
@@ -7,6 +8,9 @@ import scipy.sparse
 K = 10
 datapath = '/home/glx/Data/Tensor/'
 assert datapath is not None
+
+if 'data' not in os.listdir('.'):
+        os.mkdir('data')
 
 for dataset in ['kinships', 'umls', 'nations']:
     f = open(datapath + dataset + '.pkl')
