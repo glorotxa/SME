@@ -258,8 +258,8 @@ def Tensorexp(state, channel):
     return channel.COMPLETE
 
 
-def launch(datapath='data/', dataset='WordNet3.0', fold=1, Nent=None,
-        Nrel=None, loadmodel=False, loademb=False, op='Unstructured',
+def launch(datapath='data/', dataset='umls', fold=0, Nent=184,
+        Nrel=49, loadmodel=False, loademb=False, op='Unstructured',
         simfn='Dot', ndim=50, nhid=50, marge=1., lremb=0.1, lrparam=1.,
         nbatches=100, totepochs=2000, test_all=1, seed=666, savepath='.'):
 
