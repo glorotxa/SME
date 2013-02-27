@@ -623,6 +623,8 @@ def RankRelFnIdx(fnsim, embeddings, leftop, rightop, subtensorspec=None):
                           entities of the embedding matrix (default None: all
                           entities).
     """
+    embedding, relationl, relationr = parse_embeddings(embeddings)
+
     # Inputs
     idxr = T.iscalar('idxo')
     idxl = T.iscalar('idxl')
@@ -1018,6 +1020,23 @@ def RankingScoreRightIdx(sr, idxl, idxr, idxo):
         errr += [np.argsort(np.argsort((
             sr(l, o)[0]).flatten())[::-1]).flatten()[r] + 1]
     return errr
+
+
+def RankingScoreRelIdx(so, idxl, idxr, idxo):
+    """
+    This function computes the rank list of the rel, over a list of lhs, rhs
+    and rel indexes.
+
+    :param so: Theano function created with RankRelFnIdx().
+    :param idxl: list of 'left' indices.
+    :param idxr: list of 'right' indices.
+    :param idxo: list of relation indices.
+    """
+    erro = []
+    for l, o, r in zip(idxl, idxo, idxr):
+        erro += [np.argsort(np.argsort((
+            sr(l, r)[0]).flatten())[::-1]).flatten()[o] + 1]
+    return erro
 
 
 def RankingScore(sl, sr, so, inpl, inpr, inpo):
