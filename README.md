@@ -18,8 +18,8 @@ https://www.hds.utc.fr/everest/lib/exe/fetch.php?id=en%3Asmemlj12&cache=cache&me
              on a given dataset.
 - The data/ folder contains the data files for the learning scripts.
 - in the {dataset}/ folders:
-	* {dataset}_parse.py : parses and creates data files for the training
-					      script of a given dataset.
+	* {dataset}_parse.py : parses and creates data files for the training 
+                                              script of a given dataset.
         * {dataset}_evaluation.py : contains evaluation functions for a given
                                               dataset.
 	* {dataset}_{model_name}.py : runs the best hyperparameters
