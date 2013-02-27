@@ -14,12 +14,14 @@ https://www.hds.utc.fr/everest/lib/exe/fetch.php?id=en%3Asmemlj12&cache=cache&me
 
 - model.py : contains the classes and functions to create the different models
              and Theano functions (training, evaluation...).
-- {dataset}_parse.py : parses and creates data files for the training script of a given dataset.
 - {dataset}_exp.py : contains an experiment function to train all the different models
              on a given dataset.
-- {dataset}_evaluation.py : contains evaluation functions for a given dataset.
 - The data/ folder contains the data files for the learning scripts.
 - in the {dataset}/ folders:
+	* {dataset}_parse.py : parses and creates data files for the training
+					      script of a given dataset.
+        * {dataset}_evaluation.py : contains evaluation functions for a given
+                                              dataset.
 	* {dataset}_{model_name}.py : runs the best hyperparameters
 					      experiment for a given dataset
                                               and a given model.
