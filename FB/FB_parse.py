@@ -5,11 +5,11 @@ import numpy as np
 import scipy.sparse as sp
 
 # Put the freebase_aaai11 data absolute path here
-datapath = None
+datapath = None 
 assert datapath is not None
 
-if 'data' not in os.listdir('.'):
-    os.mkdir('data')
+if 'data' not in os.listdir('../'):
+    os.mkdir('../data')
 
 
 def parseline(line):
@@ -74,8 +74,8 @@ for i in relset:
 nbrel = idx - (nbright + nbshared + nbleft)
 print "Number of relations: ", nbrel
 
-f = open('data/FB_entity2idx.pkl', 'w')
-g = open('data/FB_idx2entity.pkl', 'w')
+f = open('../data/FB_entity2idx.pkl', 'w')
+g = open('../data/FB_idx2entity.pkl', 'w')
 cPickle.dump(entity2idx, f, -1)
 cPickle.dump(idx2entity, g, -1)
 f.close()
@@ -105,11 +105,11 @@ for datatyp in ['train', 'valid', 'test']:
         inpo[entity2idx[rel[0]], ct] = 1
         ct += 1
     # Save the datasets
-    if 'data' not in os.listdir('.'):
-        os.mkdir('data')
-    f = open('data/FB-%s-lhs.pkl' % datatyp, 'w')
-    g = open('data/FB-%s-rhs.pkl' % datatyp, 'w')
-    h = open('data/FB-%s-rel.pkl' % datatyp, 'w')
+    if 'data' not in os.listdir('../'):
+        os.mkdir('../data')
+    f = open('../data/FB-%s-lhs.pkl' % datatyp, 'w')
+    g = open('../data/FB-%s-rhs.pkl' % datatyp, 'w')
+    h = open('../data/FB-%s-rel.pkl' % datatyp, 'w')
     cPickle.dump(inpl.tocsr(), f, -1)
     cPickle.dump(inpr.tocsr(), g, -1)
     cPickle.dump(inpo.tocsr(), h, -1)
