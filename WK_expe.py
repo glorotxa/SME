@@ -148,8 +148,7 @@ def WKexp(state, channel):
             embeddings = cPickle.load(f)
             f.close()
         if not state.loademb and state.shared == False and state.op != 'SE':
-            relationl = Embeddings(np.random, state.Nrel,
-                                        state.ndim * state.nhid, 'rel')
+            relationl = Embeddings(np.random, state.Nrel, state.ndim, 'rel')
             relationr = relationl
             embeddings = [embeddings, relationl, relationr]
         if state.op == 'SE' and type(embeddings) is not list:
@@ -257,8 +256,8 @@ def WKexp(state, channel):
 
 def launch(datapath='data/', dataset='WK', Nent=37141, Nrel=5448,
         loadmodel=False, loademb=False, op='SME_lin', simfn='Dot',
-        shared = True, ndim=50, nhid=50, marge=1., lremb=0.1, lrparam=1.,
-        nbatches=100, totepochs=2000, test_all=1, neval=50, seed=666,
+        shared=False, ndim=5, nhid=5, marge=1., lremb=1., lrparam=0.1,
+        nbatches=10, totepochs=2000, test_all=1, neval=50, seed=666,
         savepath='.'):
 
     # Argument of the experiment script
