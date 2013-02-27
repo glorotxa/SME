@@ -1035,7 +1035,7 @@ def RankingScoreRelIdx(so, idxl, idxr, idxo):
     erro = []
     for l, o, r in zip(idxl, idxo, idxr):
         erro += [np.argsort(np.argsort((
-            sr(l, r)[0]).flatten())[::-1]).flatten()[o] + 1]
+            so(l, r)[0]).flatten())[::-1]).flatten()[o] + 1]
     return erro
 
 
