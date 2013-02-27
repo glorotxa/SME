@@ -13,7 +13,7 @@ def convert2idx(spmat):
     return rows[np.argsort(cols)]
 
 
-def RankingEval(datapath='data/', dataset='FB-test',
+def RankingEval(datapath='../data/', dataset='FB-test',
         loadmodel='best_valid_model.pkl', neval='all', Nright=8309,
         Nshared=7785, n=100, idx2synsetfile='FB_idx2entity.pkl'):
 
@@ -101,7 +101,7 @@ def RankingEval(datapath='data/', dataset='FB-test',
     return dres
 
 
-def ClassifEval(datapath='data/', validset='FB-valid', testset='FB-test',
+def ClassifEval(datapath='../data/', validset='FB-valid', testset='FB-test',
         loadmodel='best_valid_model.pkl', seed=647):
 
     # Load model
