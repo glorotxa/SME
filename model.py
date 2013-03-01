@@ -152,7 +152,8 @@ class LayerBilinear(object):
         return self.act(xWy + self.b)
 
     def forwardrankrel(self, x, y):
-        """Forward function."""
+        """Forward function in the special case of relation ranking to avoid a
+        broadcast problem. @TODO: think about a workaround."""
         xW = T.tensordot(x, self.W, axes=([1], [0]))
         xW = xW.reshape((1, xW.shape[1], xW.shape[2]))
         xWy = ((y.reshape((y.shape[0], y.shape[1], 1))) * xW).sum(1)
