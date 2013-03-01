@@ -402,16 +402,7 @@ def RankLeftFn(fnsim, embeddings, leftop, rightop,
     rhs = (S.dot(embedding.E, inpr).T).reshape((1, embedding.D))
     rell = (S.dot(relationl.E, inpo).T).reshape((1, relationl.D))
     relr = (S.dot(relationr.E, inpo).T).reshape((1, relationr.D))
-    # hack to prevent a broadcast problem with the Bilinear layer
-    if hasattr(leftop, 'forwardrankrel'):
-        tmpleft = leftop.forwardrankrel(lhs, rell)
-    else:
-        tmpleft = leftop(lhs, rell)
-    if hasattr(rightop, 'forwardrankrel'):
-        tmpright = rightop.forwardrankrel(rhs, relr)
-    else:
-        tmpright = rightop(lhs, rell)
-    simi = fnsim(tmpleft, tmpright)
+    simi = fnsim(leftop(lhs, rell), rightop(rhs, relr))
     """
     Theano function inputs.
     :input inpr: sparse csr matrix representing the indexes of the 'right'
@@ -479,7 +470,16 @@ def RankRelFn(fnsim, embeddings, leftop, rightop,
                 (1, embedding.D))
     lhs = (S.dot(embedding.E, inpl).T).reshape((1, embedding.D))
     rhs = (S.dot(embedding.E, inpr).T).reshape((1, embedding.D))
-    simi = fnsim(leftop(lhs, rell), rightop(rhs, relr))
+    # hack to prevent a broadcast problem with the Bilinear layer
+    if hasattr(leftop, 'forwardrankrel'):
+        tmpleft = leftop.forwardrankrel(lhs, rell)
+    else:
+        tmpleft = leftop(lhs, rell)
+    if hasattr(rightop, 'forwardrankrel'):
+        tmpright = rightop.forwardrankrel(rhs, relr)
+    else:
+        tmpright = rightop(lhs, rell)
+    simi = fnsim(tmpleft, tmpright)
     """
     Theano function inputs.
     :input inpl: sparse csr matrix representing the indexes of the 'left'
@@ -654,7 +654,16 @@ def RankRelFnIdx(fnsim, embeddings, leftop, rightop, subtensorspec=None):
     else:
         rell = embedding.E.T
         relr = embedding.E.T
-    simi = fnsim(leftop(lhs, rell), rightop(rhs, relr))
+    # hack to prevent a broadcast problem with the Bilinear layer
+    if hasattr(leftop, 'forwardrankrel'):
+        tmpleft = leftop.forwardrankrel(lhs, rell)
+    else:
+        tmpleft = leftop(lhs, rell)
+    if hasattr(rightop, 'forwardrankrel'):
+        tmpright = rightop.forwardrankrel(rhs, relr)
+    else:
+        tmpright = rightop(lhs, rell)
+    simi = fnsim(tmpleft, tmpright)
     """
     Theano function inputs.
     :input idxl: index value of the 'left' member.
