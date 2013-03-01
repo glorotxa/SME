@@ -151,6 +151,13 @@ class LayerBilinear(object):
         xWy = ((y.reshape((y.shape[0], y.shape[1], 1))) * xW).sum(1)
         return self.act(xWy + self.b)
 
+    def forwardrankrel(self, x, y):
+        """Forward function."""
+        xW = T.tensordot(x, self.W, axes=([1], [0]))
+        xW = xW.reshape((1, xW.shape[1], xW.shape[2]))
+        xWy = ((y.reshape((y.shape[0], y.shape[1], 1))) * xW).sum(1)
+        return self.act(xWy + self.b)
+
 
 class LayerMat(object):
     """
@@ -395,7 +402,16 @@ def RankLeftFn(fnsim, embeddings, leftop, rightop,
     rhs = (S.dot(embedding.E, inpr).T).reshape((1, embedding.D))
     rell = (S.dot(relationl.E, inpo).T).reshape((1, relationl.D))
     relr = (S.dot(relationr.E, inpo).T).reshape((1, relationr.D))
-    simi = fnsim(leftop(lhs, rell), rightop(rhs, relr))
+    # hack to prevent a broadcast problem with the Bilinear layer
+    if hasattr(leftop, 'forwardrankrel'):
+        tmpleft = leftop.forwardrankrel(lhs, rell)
+    else:
+        tmpleft = leftop(lhs, rell)
+    if hasattr(rightop, 'forwardrankrel'):
+        tmpright = rightop.forwardrankrel(rhs, relr)
+    else:
+        tmpright = rightop(lhs, rell)
+    simi = fnsim(tmpleft, tmpright)
     """
     Theano function inputs.
     :input inpr: sparse csr matrix representing the indexes of the 'right'
