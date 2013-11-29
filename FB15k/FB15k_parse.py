@@ -5,8 +5,7 @@ import numpy as np
 import scipy.sparse as sp
 
 # Put the freebase15k data absolute path here
-#datapath = 'path/to/fb15k/data/'
-datapath = '/Users/antoine/Work/relational_learning/TransE-release/datasets/FB15k/'
+datapath = None
 assert datapath is not None
 
 if 'data' not in os.listdir('../'):

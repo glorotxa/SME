@@ -90,25 +90,21 @@ def WNexp(state, channel):
     trainl = load_file(state.datapath + state.dataset + '-train-lhs.pkl')
     trainr = load_file(state.datapath + state.dataset + '-train-rhs.pkl')
     traino = load_file(state.datapath + state.dataset + '-train-rel.pkl')
-    if state.op == 'SE':
+    if state.op == 'SE' or state.op == 'TransE':
         traino = traino[-state.Nrel:, :]
-
-    # Negatives
-    trainln = create_random_mat(trainl.shape, np.arange(state.Nsyn))
-    trainrn = create_random_mat(trainr.shape, np.arange(state.Nsyn))
 
     # Valid set
     validl = load_file(state.datapath + state.dataset + '-valid-lhs.pkl')
     validr = load_file(state.datapath + state.dataset + '-valid-rhs.pkl')
     valido = load_file(state.datapath + state.dataset + '-valid-rel.pkl')
-    if state.op == 'SE':
+    if state.op == 'SE' or state.op == 'TransE':
         valido = valido[-state.Nrel:, :]
 
     # Test set
     testl = load_file(state.datapath + state.dataset + '-test-lhs.pkl')
     testr = load_file(state.datapath + state.dataset + '-test-rhs.pkl')
     testo = load_file(state.datapath + state.dataset + '-test-rel.pkl')
-    if state.op == 'SE':
+    if state.op == 'SE' or state.op == 'TransE':
         testo = testo[-state.Nrel:, :]
 
     # Index conversion
@@ -141,6 +137,9 @@ def WNexp(state, channel):
         elif state.op == 'SE':
             leftop = LayerMat('lin', state.ndim, state.nhid)
             rightop = LayerMat('lin', state.ndim, state.nhid)
+        elif state.op == 'TransE':
+            leftop  = LayerTrans()
+            rightop = Unstructured()
         # embeddings
         if not state.loademb:
             embeddings = Embeddings(np.random, state.Nent, state.ndim, 'emb')
@@ -154,6 +153,9 @@ def WNexp(state, channel):
             relationr = Embeddings(np.random, state.Nrel,
                     state.ndim * state.nhid, 'relr')
             embeddings = [embeddings, relationl, relationr]
+        if state.op == 'TransE' and type(embeddings) is not list:
+            relationVec = Embeddings(np.random, state.Nrel, state.ndim, 'relvec')
+            embeddings = [embeddings, relationVec, relationVec]
         simfn = eval(state.simfn + 'sim')
     else:
         f = open(state.loadmodel)
@@ -185,8 +187,9 @@ def WNexp(state, channel):
         trainl = trainl[:, order]
         trainr = trainr[:, order]
         traino = traino[:, order]
-        trainln = trainln[:, np.random.permutation(trainln.shape[1])]
-        trainrn = trainrn[:, np.random.permutation(trainrn.shape[1])]
+        # Negatives
+        trainln = create_random_mat(trainl.shape, np.arange(state.Nsyn))
+        trainrn = create_random_mat(trainr.shape, np.arange(state.Nsyn))
 
         for i in range(state.nbatches):
             tmpl = trainl[:, i * batchsize:(i + 1) * batchsize]
@@ -258,7 +261,7 @@ def WNexp(state, channel):
 def launch(datapath='data/', dataset='WN', Nent=40961,
         Nsyn=40943, Nrel=18, loadmodel=False, loademb=False, op='Unstructured',
         simfn='Dot', ndim=50, nhid=50, marge=1., lremb=0.1, lrparam=1.,
-        nbatches=100, totepochs=2000, test_all=1, neval=50, seed=666,
+        nbatches=100, totepochs=2000, test_all=1, neval=50, seed=123,
         savepath='.'):
 
     # Argument of the experiment script
