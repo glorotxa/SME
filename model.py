@@ -10,6 +10,7 @@ import scipy.sparse
 import theano
 import theano.sparse as S
 import theano.tensor as T
+from collections import OrderedDict
 
 
 # Similarity functions -------------------------------------------------------
@@ -194,6 +195,20 @@ class LayerMat(object):
         return self.act((rx * ry).sum(1))
 
 
+class LayerTrans(object):
+    """
+    Class for a layer with two input vectors that performs the sum of 
+    of the 'left member' and 'right member'i.e. translating x by y.
+    """
+
+    def __init__(self):
+        """Constructor."""
+        self.params = []
+
+    def __call__(self, x, y):
+        """Forward function."""
+        return x+y
+
 class Unstructured(object):
     """
     Class for a layer with two input vectors that performs the linear operator
@@ -211,6 +226,7 @@ class Unstructured(object):
     def __call__(self, x, y):
         """Forward function."""
         return x
+
 # ----------------------------------------------------------------------------
 
 
@@ -236,7 +252,7 @@ class Embeddings(object):
         self.E = theano.shared(value=W_values, name='E' + tag)
         # Define a normalization function with respect to the L_2 norm of the
         # embedding vectors.
-        self.updates = {self.E: self.E / T.sqrt(T.sum(self.E ** 2, axis=0))}
+        self.updates = OrderedDict({self.E: self.E / T.sqrt(T.sum(self.E ** 2, axis=0))})
         self.normalize = theano.function([], [], updates=self.updates)
 # ----------------------------------------------------------------------------
 
@@ -721,11 +737,11 @@ def TrainFn(fnsim, embeddings, leftop, rightop, marge=1.0):
         # If the similarity function has some parameters, we update them too.
         gradientsparams = T.grad(cost,
             leftop.params + rightop.params + fnsim.params)
-        updates = dict((i, i - lrparams * j) for i, j in zip(
+        updates = OrderedDict((i, i - lrparams * j) for i, j in zip(
             leftop.params + rightop.params + fnsim.params, gradientsparams))
     else:
         gradientsparams = T.grad(cost, leftop.params + rightop.params)
-        updates = dict((i, i - lrparams * j) for i, j in zip(
+        updates = OrderedDict((i, i - lrparams * j) for i, j in zip(
             leftop.params + rightop.params, gradientsparams))
     # Embeddings gradients
     gradients_embedding = T.grad(cost, embedding.E)
@@ -889,11 +905,11 @@ def TrainFn1Member(fnsim, embeddings, leftop, rightop, marge=1.0, rel=True):
         # If the similarity function has some parameters, we update them too.
         gradientsparams = T.grad(cost,
             leftop.params + rightop.params + fnsim.params)
-        updates = dict((i, i - lrparams * j) for i, j in zip(
+        updates = OrderedDict((i, i - lrparams * j) for i, j in zip(
             leftop.params + rightop.params + fnsim.params, gradientsparams))
     else:
         gradientsparams = T.grad(cost, leftop.params + rightop.params)
-        updates = dict((i, i - lrparams * j) for i, j in zip(
+        updates = OrderedDict((i, i - lrparams * j) for i, j in zip(
             leftop.params + rightop.params, gradientsparams))
     gradients_embedding = T.grad(cost, embedding.E)
     newE = embedding.E - lrembeddings * gradients_embedding

@@ -1,17 +1,26 @@
 SME
 ===
 
+------
+Update (Nov 13): the code for Translating Embeddings (see https://www.hds.utc.fr/everest/doku.php?id=en:transe) has been included.
+------
+
 1. Overview
 -----------------------------------------------------------------
 
-This package proposes scripts using Theano to perform training and evaluation
-of the Structured Embeddings model (Bordes et al., AAAI 2011) and of the
-Semantic Matching Energy model (Bordes et al., AISTATS 2012) on several
-datasets.
+This package proposes scripts using Theano to perform training and evaluation on several
+datasets of the models: 
+- Structured Embeddings (Bordes et al., AAAI 2011);
+- Semantic Matching Energy (Bordes et al., MLJ 2013);
+- *NEW* Translating Embeddings (Bordes et al., NIPS 2013).
 
-Please refer to the following paper for more details: 
-https://www.hds.utc.fr/everest/lib/exe/fetch.php?id=en%3Asmemlj12&cache=cache&media=en:bordes12aistats.pdf
+Please refer to the following pages for more details and references:  
+- https://www.hds.utc.fr/everest/doku.php?id=en:smemlj12
+- *NEW* https://www.hds.utc.fr/everest/doku.php?id=en:transe
 
+The architecture of this package has been designed by Xavier Glorot (github.com/glorotxa).
+
+Content of the package:
 - model.py : contains the classes and functions to create the different models
              and Theano functions (training, evaluation...).
 - {dataset}_exp.py : contains an experiment function to train all the different models
@@ -32,7 +41,12 @@ https://www.hds.utc.fr/everest/lib/exe/fetch.php?id=en%3Asmemlj12&cache=cache&me
 	                              all types to test the scripts.
 
 The datasets currently available are:
- * WordNet (WN) (to download from https://www.hds.utc.fr/everest/doku.php?id=en:smemlj12)
+ * Benchmarks Kinhsips, UMLS & Nations (Tensor) to be downloaded from https://www.hds.utc.fr/everest/doku.php?id=en:smemlj12
+ * WordNet (WN) to be downloaded from https://www.hds.utc.fr/everest/doku.php?id=en:smemlj12
+ * Freebase (FB) split used in (Bordes et al., AAAI 2011) to be downloaded from https://www.hds.utc.fr/everest/doku.php?id=en:smemlj12
+ * *NEW* Freebase15k (FB15k)  split used in (Bordes et al., NIPS 2013) to be downloaded from https://www.hds.utc.fr/everest/doku.php?id=en:transe
+
+
 
 2. 3rd Party Libraries
 -----------------------------------------------------------------
@@ -53,11 +67,11 @@ Put the script folder in your PYTHONPATH.
 4. Create the data files
 -----------------------------------------------------------------
 
-* WordNet (WN):
 Put the absolute path of the extracted wordnet-mlj data (downloaded from:
-https://www.hds.utc.fr/everest/doku.php?id=en:smemlj12) at the beginning of the
-WN_parse.py script and run it (the SME folder has to be your current
-directory).
+https://www.hds.utc.fr/everest/doku.php?id=en:smemlj12 or 
+https://www.hds.utc.fr/everest/doku.php?id=en:transe) at the beginning of the
+{dataset}_parse.py script and run it (the SME folder has to be your current
+directory). Note: Running Tensor_parse.py generates data for both Kinhsips, UMLS & Nations.
 
 5. Run and evaluate a model
 -----------------------------------------------------------------
