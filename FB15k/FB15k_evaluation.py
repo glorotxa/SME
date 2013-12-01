@@ -50,25 +50,25 @@ def RankingEval(datapath='../data/', dataset='FB15k-test',
     dres = {}
     dres.update({'microlmean': np.mean(res[0])})
     dres.update({'microlmedian': np.median(res[0])})
-    dres.update({'microlr@n': np.mean(np.asarray(res[0]) <= n) * 100})
+    dres.update({'microlhits@n': np.mean(np.asarray(res[0]) <= n) * 100})
     dres.update({'micrormean': np.mean(res[1])})
     dres.update({'micrormedian': np.median(res[1])})
-    dres.update({'microrr@n': np.mean(np.asarray(res[1]) <= n) * 100})
+    dres.update({'microrhits@n': np.mean(np.asarray(res[1]) <= n) * 100})
     resg = res[0] + res[1]
     dres.update({'microgmean': np.mean(resg)})
     dres.update({'microgmedian': np.median(resg)})
-    dres.update({'microgr@n': np.mean(np.asarray(resg) <= n) * 100})
+    dres.update({'microghits@n': np.mean(np.asarray(resg) <= n) * 100})
 
     print "### MICRO:"
-    print "\t-- left   >> mean: %s, median: %s, r@%s: %s%%" % (
+    print "\t-- left   >> mean: %s, median: %s, hits@%s: %s%%" % (
             round(dres['microlmean'], 5), round(dres['microlmedian'], 5),
-            n, round(dres['microlr@n'], 3))
-    print "\t-- right  >> mean: %s, median: %s, r@%s: %s%%" % (
+            n, round(dres['microlhits@n'], 3))
+    print "\t-- right  >> mean: %s, median: %s, hits@%s: %s%%" % (
             round(dres['micrormean'], 5), round(dres['micrormedian'], 5),
-            n, round(dres['microrr@n'], 3))
-    print "\t-- global >> mean: %s, median: %s, r@%s: %s%%" % (
+            n, round(dres['microrhits@n'], 3))
+    print "\t-- global >> mean: %s, median: %s, hits@%s: %s%%" % (
             round(dres['microgmean'], 5), round(dres['microgmedian'], 5),
-            n, round(dres['microgr@n'], 3))
+            n, round(dres['microghits@n'], 3))
 
     listrel = set(idxo)
     dictrelres = {}
@@ -116,24 +116,24 @@ def RankingEval(datapath='../data/', dataset='FB15k-test',
 
     dres.update({'macrolmean': np.mean(dictrellmean.values())})
     dres.update({'macrolmedian': np.mean(dictrellmedian.values())})
-    dres.update({'macrolr@n': np.mean(dictrellrn.values())})
+    dres.update({'macrolhits@n': np.mean(dictrellrn.values())})
     dres.update({'macrormean': np.mean(dictrelrmean.values())})
     dres.update({'macrormedian': np.mean(dictrelrmedian.values())})
-    dres.update({'macrorr@n': np.mean(dictrelrrn.values())})
+    dres.update({'macrorhits@n': np.mean(dictrelrrn.values())})
     dres.update({'macrogmean': np.mean(dictrelgmean.values())})
     dres.update({'macrogmedian': np.mean(dictrelgmedian.values())})
-    dres.update({'macrogr@n': np.mean(dictrelgrn.values())})
+    dres.update({'macroghits@n': np.mean(dictrelgrn.values())})
 
     print "### MACRO:"
-    print "\t-- left   >> mean: %s, median: %s, r@%s: %s%%" % (
+    print "\t-- left   >> mean: %s, median: %s, hits@%s: %s%%" % (
             round(dres['macrolmean'], 5), round(dres['macrolmedian'], 5),
-            n, round(dres['macrolr@n'], 3))
-    print "\t-- right  >> mean: %s, median: %s, r@%s: %s%%" % (
+            n, round(dres['macrolhits@n'], 3))
+    print "\t-- right  >> mean: %s, median: %s, hits@%s: %s%%" % (
             round(dres['macrormean'], 5), round(dres['macrormedian'], 5),
-            n, round(dres['macrorr@n'], 3))
-    print "\t-- global >> mean: %s, median: %s, r@%s: %s%%" % (
+            n, round(dres['macrorhits@n'], 3))
+    print "\t-- global >> mean: %s, median: %s, hits@%s: %s%%" % (
             round(dres['macrogmean'], 5), round(dres['macrogmedian'], 5),
-            n, round(dres['macrogr@n'], 3))
+            n, round(dres['macroghits@n'], 3))
 
     return dres
 
