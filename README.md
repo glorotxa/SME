@@ -1,9 +1,8 @@
 SME
 ===
 
-------
-Update (Nov 13): the code for Translating Embeddings (see https://www.hds.utc.fr/everest/doku.php?id=en:transe) has been included.
-------
+
+**Update (Nov 13):** the code for Translating Embeddings (see https://www.hds.utc.fr/everest/doku.php?id=en:transe) has been included along with a new version for Freebase (FB15k).
 
 1. Overview
 -----------------------------------------------------------------
