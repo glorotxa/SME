@@ -61,5 +61,11 @@ Simply run the corresponding {dataset}_{model_name}.py file (the SME/{dataset}/ 
 6. Citing
 -----------------------------------------------------------------
 
-If you use this code, you could provide the link to the github page: https://github.com/glorotxa/SME . Also, depending on the model used, you should cite the *Structured Embeddings** paper (Bordes et al., AAAI 2011), the **Semantic Matching Energy** one (Bordes et al., MLJ 2013) or the  **Translating Embeddings** one (Bordes et al., NIPS 2013).
+If you use this code, you could provide the link to the github page: https://github.com/glorotxa/SME . Also, depending on the model used, you should cite either the paper on **Structured Embeddings** (Bordes et al., AAAI 2011), on **Semantic Matching Energy** (Bordes et al., MLJ 2013) or on **Translating Embeddings** (Bordes et al., NIPS 2013).
+
+7. References
+-----------------------------------------------------------------
+- (Bordes et al., NIPS 2013) *Translating Embeddings for Modeling Multi-relational Data* (2013). Antoine Bordes, Nicolas Usunier, Alberto Garcia-Duran, Jason Weston and Oksana Yakhnenko. In Proceedings of Neural Information Processing Systems (NIPS 26), Lake Taho, NV, USA. Dec. 2013.
+- (Bordes et al., MLJ 2013) *A Semantic Matching Energy Function for Learning with Multi-relational Data* (2013). Antoine Bordes, Xavier Glorot, Jason Weston, and Yoshua Bengio. in Machine Learning. Springer, DOI: 10.1007/s10994-013-5363-6, May 2013
+- (Bordes et al., AAAI 2011) *Learning Structured Embeddings of Knowledge Bases* (2011). Antoine Bordes, Jason Weston, Ronan Collobert and Yoshua Bengio. in Proceedings of the 25th Conference on Artificial Intelligence (AAAI), AAAI Press.
 
