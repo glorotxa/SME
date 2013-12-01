@@ -1,0 +1,10 @@
+##### EVALUATION #####
+
+### MICRO:
+	-- left   >> mean: 268.5358, median: 28.0, hits@10: 33.72%
+	-- right  >> mean: 189.39143, median: 17.0, hits@10: 40.812%
+	-- global >> mean: 228.96361, median: 22.0, hits@10: 37.266%
+### MACRO:
+	-- left   >> mean: 338.6627, median: 274.2846, hits@10: 31.9%
+	-- right  >> mean: 296.04143, median: 240.66493, hits@10: 38.49%
+	-- global >> mean: 317.35207, median: 208.57388, hits@10: 35.195%
