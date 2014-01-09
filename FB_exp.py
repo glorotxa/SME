@@ -18,15 +18,11 @@ def create_random_mat(shape, listidx=None):
     if listidx is None:
         listidx = np.arange(shape[0])
     listidx = listidx[np.random.permutation(len(listidx))]
-    randommat = scipy.sparse.lil_matrix((shape[0], shape[1]),
-            dtype=theano.config.floatX)
-    idx_term = 0
-    for idx_ex in range(shape[1]):
-        if idx_term == len(listidx):
-            idx_term = 0
-        randommat[listidx[idx_term], idx_ex] = 1
-        idx_term += 1
-    return randommat.tocsr()
+    cooData = np.ones(shape[1], dtype=theano.config.floatX)
+    cooRowIdxs = listidx[np.arange(shape[1]) % len(listidx)]
+    cooColIdxs = range(shape[1])
+    randommat = scipy.sparse.coo_matrix((cooData, (cooRowIdxs, cooColIdxs)), shape=shape)
+    return scipy.sparse.csc_matrix(randommat)
 
 
 def load_file(path):
