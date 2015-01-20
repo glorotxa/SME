@@ -2,7 +2,7 @@ SME
 ===
 The architecture of this package has been designed by **Xavier Glorot** (https://github.com/glorotxa), with some contributions from **Antoine Bordes** (https://www.hds.utc.fr/~bordesan).
 
-**Update (Nov 13):** the code for Translating Embeddings (see https://www.hds.utc.fr/everest/doku.php?id=en:transe) has been included along with a new version for Freebase (FB15k).
+**Update (Nov 13):** the code for Translating Embeddings (see https://everest.hds.utc.fr/doku.php?id=en:transe) has been included along with a new version for Freebase (FB15k).
 
 1. Overview
 -----------------------------------------------------------------
@@ -13,8 +13,8 @@ This package proposes scripts using Theano to perform training and evaluation on
 - *NEW* **Translating Embeddings** (TransE) defined in (Bordes et al., NIPS 2013).
 
 Please refer to the following pages for more details and references:  
-- https://www.hds.utc.fr/everest/doku.php?id=en:smemlj12
-- *NEW* https://www.hds.utc.fr/everest/doku.php?id=en:transe
+- https://everest.hds.utc.fr/doku.php?id=en:smemlj12
+- *NEW* https://everest.hds.utc.fr/doku.php?id=en:transe
 
 Content of the package:
 - model.py : contains the classes and functions to create the different models and Theano functions (training, evaluation...).
@@ -28,10 +28,10 @@ Content of the package:
 	* {dataset}_test.py : perform quick runs for small models of all types to test the scripts.
 
 The datasets currently available are:
- * **Multi-relational benchmarks** (Kinhsips, UMLS & Nations -- Tensor folder) to be downloaded from https://www.hds.utc.fr/everest/doku.php?id=en:smemlj12
- * **WordNet** (WN folder) to be downloaded from https://www.hds.utc.fr/everest/doku.php?id=en:smemlj12
- * **Freebase** (FB folder) used in (Bordes et al., AAAI 2011) to be downloaded from https://www.hds.utc.fr/everest/doku.php?id=en:smemlj12
- * *NEW* **Freebase15k** (FB15k folder)  used in (Bordes et al., NIPS 2013) to be downloaded from https://www.hds.utc.fr/everest/doku.php?id=en:transe
+ * **Multi-relational benchmarks** (Kinhsips, UMLS & Nations -- Tensor folder) to be downloaded from https://everest.hds.utc.fr/doku.php?id=en:smemlj12
+ * **WordNet** (WN folder) to be downloaded from https://everest.hds.utc.fr/doku.php?id=en:smemlj12
+ * **Freebase** (FB folder) used in (Bordes et al., AAAI 2011) to be downloaded from https://everest.hds.utc.fr/doku.php?id=en:smemlj12
+ * *NEW* **Freebase15k** (FB15k folder)  used in (Bordes et al., NIPS 2013) to be downloaded from https://everest.hds.utc.fr/doku.php?id=en:transe
 
 
 
@@ -51,7 +51,7 @@ Put the script folder in your PYTHONPATH.
 4. Data Files Creation
 -----------------------------------------------------------------
 
-Put the absolute path of the downloaded dataset (from: https://www.hds.utc.fr/everest/doku.php?id=en:smemlj12 or  https://www.hds.utc.fr/everest/doku.php?id=en:transe) at the beginning of the {dataset}_parse.py script and run it (the SME folder has to be your current directory). Note: Running Tensor_parse.py generates data for both Kinhsips, UMLS & Nations.
+Put the absolute path of the downloaded dataset (from: https://everest.hds.utc.fr/doku.php?id=en:smemlj12 or  https://everest.hds.utc.fr/doku.php?id=en:transe) at the beginning of the {dataset}_parse.py script and run it (the SME folder has to be your current directory). Note: Running Tensor_parse.py generates data for both Kinhsips, UMLS & Nations.
 
 5. Training and Evaluating a Model
 -----------------------------------------------------------------
