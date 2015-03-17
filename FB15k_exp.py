@@ -92,6 +92,10 @@ def FB15kexp(state, channel):
     traino = load_file(state.datapath + state.dataset + '-train-rel.pkl')
     if state.op == 'SE' or state.op == 'TransE':
         traino = traino[-state.Nrel:, :]
+    elif state.op =='Bi' or state.op == 'Tri'or state.op == 'TATEC':
+        trainl = trainl[:state.Nsyn, :]
+        trainr = trainr[:state.Nsyn, :]
+        traino = traino[-state.Nrel:, :]
 
     # Valid set
     validl = load_file(state.datapath + state.dataset + '-valid-lhs.pkl')
@@ -99,12 +103,21 @@ def FB15kexp(state, channel):
     valido = load_file(state.datapath + state.dataset + '-valid-rel.pkl')
     if state.op == 'SE' or state.op == 'TransE':
         valido = valido[-state.Nrel:, :]
+    elif state.op =='Bi' or state.op == 'Tri'or state.op == 'TATEC':
+        validl = validl[:state.Nsyn, :]
+        validr = validr[:state.Nsyn, :]
+        valido = valido[-state.Nrel:, :]
+
 
     # Test set
     testl = load_file(state.datapath + state.dataset + '-test-lhs.pkl')
     testr = load_file(state.datapath + state.dataset + '-test-rhs.pkl')
     testo = load_file(state.datapath + state.dataset + '-test-rel.pkl')
     if state.op == 'SE' or state.op == 'TransE':
+        testo = testo[-state.Nrel:, :]
+    elif state.op =='Bi' or state.op == 'Tri'or state.op == 'TATEC':
+        testl = testl[:state.Nsyn, :]
+        testr = testr[:state.Nsyn, :]
         testo = testo[-state.Nrel:, :]
 
     # Index conversion
@@ -117,6 +130,17 @@ def FB15kexp(state, channel):
     testlidx = convert2idx(testl)[:state.neval]
     testridx = convert2idx(testr)[:state.neval]
     testoidx = convert2idx(testo)[:state.neval]
+    
+    idxl = convert2idx(trainl)
+    idxr = convert2idx(trainr)
+    idxo = convert2idx(traino)
+    idxtl = convert2idx(testl)
+    idxtr = convert2idx(testr)
+    idxto = convert2idx(testo)
+    idxvl = convert2idx(validl)
+    idxvr = convert2idx(validr)
+    idxvo = convert2idx(valido)
+    true_triples=np.concatenate([idxtl,idxvl,idxl,idxto,idxvo,idxo,idxtr,idxvr,idxr]).reshape(3,idxtl.shape[0]+idxvl.shape[0]+idxl.shape[0]).T
 
     # Model declaration
     if not state.loadmodel:
@@ -136,6 +160,12 @@ def FB15kexp(state, channel):
         elif state.op == 'TransE':
             leftop  = LayerTrans()
             rightop = Unstructured()
+        elif state.op == 'Bi':
+            leftop = LayerMat('lin', state.ndim, 1)
+            rightop = LayerdMat()
+        elif state.op == 'Tri':
+            leftop = LayerMat('lin', state.ndim, 1)
+            rightop = LayerMat('lin', state.ndim, state.ndim)
         # embeddings
         if not state.loademb:
             embeddings = Embeddings(np.random, state.Nent, state.ndim, 'emb')
@@ -150,22 +180,58 @@ def FB15kexp(state, channel):
         if state.op == 'TransE' and type(embeddings) is not list:
             relationVec = Embeddings(np.random, state.Nrel, state.ndim, 'relvec')
             embeddings = [embeddings, relationVec, relationVec]
+        if state.op == 'Bi' and type(embeddings) is not list:
+            embeddings = Embeddings(np.random, state.Nsyn, state.ndim, 'emb')
+            W = Embeddings(np.random, 1, state.ndim, 'W')
+            rel_matricesl = Embeddings(np.random, state.Nrel, state.ndim, 'relmatL')
+            rel_matricesr = Embeddings(np.random, state.Nrel, state.ndim, 'relmatR')
+            embeddings = [embeddings, W, rel_matricesl, rel_matricesr]
+        if state.op == 'Tri' and type(embeddings) is not list:
+            embeddings = Embeddings(np.random, state.Nsyn, state.ndim, 'emb')
+            rel_matrices = Embeddings(np.random, state.Nrel, state.ndim*state.ndim, 'relmat')
+            embeddings = [embeddings, rel_matrices]
         simfn = eval(state.simfn + 'sim')
     else:
-        f = open(state.loadmodel)
-        embeddings = cPickle.load(f)
-        leftop = cPickle.load(f)
-        rightop = cPickle.load(f)
-        simfn = cPickle.load(f)
-        f.close()
+        if state.op == 'TATEC':
+            f = open(state.loadmodelBi)
+            embbi = cPickle.load(f)
+            leftopbi = cPickle.load(f)
+            rightopbi = cPickle.load(f)
+            f.close()
+            f = open(state.loadmodelTri)
+            embtri = cPickle.load(f)
+            leftoptri = cPickle.load(f)
+            rightoptri = cPickle.load(f)
+            f.close()
+            embeddings = [embbi[0], embbi[1], embbi[2], embbi[3], embtri[0], embtri[1]]
+        else:
+            f = open(state.loadmodel)
+            embeddings = cPickle.load(f)
+            leftop = cPickle.load(f)
+            rightop = cPickle.load(f)
+            simfn = cPickle.load(f)
+            f.close()
 
     # Function compilation
-    trainfunc = TrainFn1Member(simfn, embeddings, leftop, rightop,
-            marge=state.marge, rel=False)
-    ranklfunc = RankLeftFnIdx(simfn, embeddings, leftop, rightop,
-            subtensorspec=state.Nsyn)
-    rankrfunc = RankRightFnIdx(simfn, embeddings, leftop, rightop,
-            subtensorspec=state.Nsyn)
+    if state.op == 'Bi':
+        trainfunc = TrainFn1MemberBi(embeddings, leftop, rightop, marge=state.marge)
+        ranklfunc = RankLeftFnIdxBi(embeddings, leftop, rightop, subtensorspec=state.Nsyn)
+        rankrfunc = RankRightFnIdxBi(embeddings, leftop, rightop, subtensorspec=state.Nsyn)
+    elif state.op == 'Tri':
+        trainfunc = TrainFn1MemberTri(embeddings, leftop, rightop, marge=state.marge)
+        ranklfunc = RankLeftFnIdxTri(embeddings, leftop, rightop, subtensorspec=state.Nsyn)
+        rankrfunc = RankRightFnIdxTri(embeddings, leftop, rightop, subtensorspec=state.Nsyn)
+    elif state.op == 'TATEC':
+        trainfunc = TrainFn1MemberTATEC(embeddings, leftopbi, leftoptri, rightopbi, rightoptri, marge=state.marge)
+        ranklfunc = RankLeftFnIdxTATEC(embeddings, leftopbi, leftoptri, rightopbi, rightoptri, subtensorspec=state.Nsyn)
+        rankrfunc = RankRightFnIdxTATEC(embeddings, leftopbi, leftoptri, rightopbi, rightoptri, subtensorspec=state.Nsyn)      
+    else:
+        trainfunc = TrainFn1Member(simfn, embeddings, leftop, rightop,
+                marge=state.marge, rel=False)
+        ranklfunc = RankLeftFnIdx(simfn, embeddings, leftop, rightop,
+                subtensorspec=state.Nsyn)
+        rankrfunc = RankRightFnIdx(simfn, embeddings, leftop, rightop,
+                subtensorspec=state.Nsyn)
 
     out = []
     outb = []
@@ -193,12 +259,39 @@ def FB15kexp(state, channel):
             tmpnl = trainln[:, i * batchsize:(i + 1) * batchsize]
             tmpnr = trainrn[:, i * batchsize:(i + 1) * batchsize]
             # training iteration
-            outtmp = trainfunc(state.lremb, state.lrparam / float(batchsize),
+            outtmp = trainfunc(state.lremb, state.lrparam,
                     tmpl, tmpr, tmpo, tmpnl, tmpnr)
             out += [outtmp[0] / float(batchsize)]
             outb += [outtmp[1]]
             # embeddings normalization
-            if type(embeddings) is list:
+            if type(embeddings) is list and state.op == 'Bi':
+                auxE = embeddings[0].E.get_value()
+                idx=np.where(np.sqrt(np.sum(auxE ** 2, axis=0)) > state.rhoE)
+                auxE[:, idx] = (state.rhoE*auxE[:, idx]) / np.sqrt(np.sum(auxE[:, idx] ** 2, axis=0))
+                embeddings[0].E.set_value(auxE)
+            elif type(embeddings) is list and state.op == 'Tri':
+                auxE = embeddings[0].E.get_value()
+                idx=np.where(np.sqrt(np.sum(auxE ** 2, axis=0)) > state.rhoE)
+                auxE[:, idx] = (state.rhoE*auxE[:, idx]) / np.sqrt(np.sum(auxE[:, idx] ** 2, axis=0))
+                embeddings[0].E.set_value(auxE)
+                auxR = embeddings[1].E.get_value()
+                idx=np.where(np.sqrt(np.sum(auxR ** 2, axis=0)) > state.rhoL)
+                auxR[:, idx] = (state.rhoL*auxR[:, idx]) / np.sqrt(np.sum(auxR[:, idx] ** 2, axis=0))
+                embeddings[1].E.set_value(auxR)
+            elif type(embeddings) is list and state.op == 'TATEC':
+                auxEb = embeddings[0].E.get_value()
+                idxb=np.where(np.sqrt(np.sum(auxEb ** 2, axis=0)) > state.rhoE)
+                auxEb[:, idxb] = (state.rhoE*auxEb[:, idxb]) / np.sqrt(np.sum(auxEb[:, idxb] ** 2, axis=0))
+                embeddings[0].E.set_value(auxEb)
+                auxEt = embeddings[4].E.get_value()
+                idxt=np.where(np.sqrt(np.sum(auxEt ** 2, axis=0)) > state.rhoE)
+                auxEt[:, idxt] = (state.rhoE*auxEt[:, idxt]) / np.sqrt(np.sum(auxEt[:, idxt] ** 2, axis=0))
+                embeddings[4].E.set_value(auxEt)
+                auxR = embeddings[5].E.get_value()
+                idxr=np.where(np.sqrt(np.sum(auxR ** 2, axis=0)) > state.rhoL)
+                auxR[:, idxr] = (state.rhoL*auxR[:, idxr]) / np.sqrt(np.sum(auxR[:, idxr] ** 2, axis=0))
+                embeddings[5].E.set_value(auxR)
+            elif type(embeddings) is list:
                 embeddings[0].normalize()
             else:
                 embeddings.normalize()
@@ -214,36 +307,50 @@ def FB15kexp(state, channel):
                     round(np.mean(outb) * 100, 3))
             out = []
             outb = []
-            resvalid = RankingScoreIdx(ranklfunc, rankrfunc,
-                    validlidx, validridx, validoidx)
+            resvalid = FilteredRankingScoreIdx(ranklfunc, rankrfunc,
+                    validlidx, validridx, validoidx, true_triples)
             state.valid = np.mean(resvalid[0] + resvalid[1])
-            restrain = RankingScoreIdx(ranklfunc, rankrfunc,
-                    trainlidx, trainridx, trainoidx)
+            restrain = FilteredRankingScoreIdx(ranklfunc, rankrfunc,
+                    trainlidx, trainridx, trainoidx, true_triples)
             state.train = np.mean(restrain[0] + restrain[1])
             print >> sys.stderr, "\tMEAN RANK >> valid: %s, train: %s" % (
                     state.valid, state.train)
             if state.bestvalid == -1 or state.valid < state.bestvalid:
-                restest = RankingScoreIdx(ranklfunc, rankrfunc,
-                        testlidx, testridx, testoidx)
+                restest = FilteredRankingScoreIdx(ranklfunc, rankrfunc,
+                        testlidx, testridx, testoidx, true_triples)
                 state.bestvalid = state.valid
                 state.besttrain = state.train
                 state.besttest = np.mean(restest[0] + restest[1])
                 state.bestepoch = epoch_count
                 # Save model best valid model
                 f = open(state.savepath + '/best_valid_model.pkl', 'w')
-                cPickle.dump(embeddings, f, -1)
-                cPickle.dump(leftop, f, -1)
-                cPickle.dump(rightop, f, -1)
-                cPickle.dump(simfn, f, -1)
+                if state.op == 'TATEC':
+                    cPickle.dump(embeddings, f, -1)
+                    cPickle.dump(leftopbi, f, -1)
+                    cPickle.dump(leftoptri, f, -1)
+                    cPickle.dump(rightopbi, f, -1)
+                    cPickle.dump(rightoptri, f, -1)
+                else:
+                    cPickle.dump(embeddings, f, -1)
+                    cPickle.dump(leftop, f, -1)
+                    cPickle.dump(rightop, f, -1)
+                    cPickle.dump(simfn, f, -1)
                 f.close()
                 print >> sys.stderr, "\t\t##### NEW BEST VALID >> test: %s" % (
                         state.besttest)
             # Save current model
             f = open(state.savepath + '/current_model.pkl', 'w')
-            cPickle.dump(embeddings, f, -1)
-            cPickle.dump(leftop, f, -1)
-            cPickle.dump(rightop, f, -1)
-            cPickle.dump(simfn, f, -1)
+            if state.op == 'TATEC':
+                cPickle.dump(embeddings, f, -1)
+                cPickle.dump(leftopbi, f, -1)
+                cPickle.dump(leftoptri, f, -1)
+                cPickle.dump(rightopbi, f, -1)
+                cPickle.dump(rightoptri, f, -1)
+            else:
+                cPickle.dump(embeddings, f, -1)
+                cPickle.dump(leftop, f, -1)
+                cPickle.dump(rightop, f, -1)
+                cPickle.dump(simfn, f, -1)
             f.close()
             state.nbepochs = epoch_count
             print >> sys.stderr, "\t(the evaluation took %s seconds)" % (
@@ -253,27 +360,30 @@ def FB15kexp(state, channel):
     return channel.COMPLETE
 
 
-def launch(datapath='data/', dataset='FB15k', Nent=16296,
+def launch(datapath='data/', dataset='FB15k', Nent=16296, rhoE=1, rhoL=5,
         Nsyn=14951, Nrel=1345, loadmodel=False, loademb=False, op='Unstructured',
         simfn='Dot', ndim=50, nhid=50, marge=1., lremb=0.1, lrparam=1.,
         nbatches=100, totepochs=2000, test_all=1, neval=50, seed=123,
-        savepath='.'):
+        savepath='.', loadmodelBi=False, loadmodelTri=False):
 
     # Argument of the experiment script
     state = DD()
-
     state.datapath = datapath
     state.dataset = dataset
     state.Nent = Nent
     state.Nsyn = Nsyn
     state.Nrel = Nrel
     state.loadmodel = loadmodel
+    state.loadmodelBi = loadmodelBi
+    state.loadmodelTri = loadmodelTri
     state.loademb = loademb
     state.op = op
     state.simfn = simfn
     state.ndim = ndim
     state.nhid = nhid
     state.marge = marge
+    state.rhoE = rhoE
+    state.rhoL = rhoL
     state.lremb = lremb
     state.lrparam = lrparam
     state.nbatches = nbatches
