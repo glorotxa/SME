@@ -137,6 +137,75 @@ def RankingEval(datapath='../data/', dataset='FB15k-test',
 
     return dres
 
+def RankingEvalFil(datapath='../data/', dataset='umls-test', op='TransE',
+        loadmodel='best_valid_model.pkl', fold=0, Nrel=26, Nsyn=135):
+
+    # Load model
+    if op == 'TATEC':
+        f = open(loadmodel)
+        embeddings = cPickle.load(f)
+        leftopbi = cPickle.load(f)
+        leftoptri = cPickle.load(f)
+        rightopbi = cPickle.load(f)
+        rightoptri = cPickle.load(f)
+        f.close()
+    else:
+        f = open(loadmodel)
+        embeddings = cPickle.load(f)
+        leftop =cPickle.load(f)
+        rightop =cPickle.load(f)
+        f.close()
+
+    # Load data
+    l = load_file(datapath + dataset + '-test-lhs.pkl')
+    r = load_file(datapath + dataset + '-test-rhs.pkl')
+    o = load_file(datapath + dataset + '-test-rel.pkl')
+    o = o[-Nrel:, :]
+
+    tl = load_file(datapath + dataset + '-train-lhs.pkl')
+    tr = load_file(datapath + dataset + '-train-rhs.pkl')
+    to = load_file(datapath + dataset + '-train-rel.pkl')
+    to = to[-Nrel:, :]
+
+
+    vl = load_file(datapath + dataset + '-valid-lhs.pkl')
+    vr = load_file(datapath + dataset + '-valid-rhs.pkl')
+    vo = load_file(datapath + dataset + '-valid-rel.pkl')
+    vo = vo[-Nrel:, :]
+
+    idxl = convert2idx(l)
+    idxr = convert2idx(r)
+    idxo = convert2idx(o)
+    idxtl = convert2idx(tl)
+    idxtr = convert2idx(tr)
+    idxto = convert2idx(to)
+    idxvl = convert2idx(vl)
+    idxvr = convert2idx(vr)
+    idxvo = convert2idx(vo)
+    
+    if op == 'Bi':
+        ranklfunc = RankLeftFnIdxBi(embeddings, leftop, rightop,
+            subtensorspec=Nsyn)
+        rankrfunc = RankRightFnIdxBi(embeddings, leftop, rightop,
+            subtensorspec=Nsyn)
+    elif op == 'Tri':
+        ranklfunc = RankLeftFnIdxTri(embeddings, leftop, rightop,
+            subtensorspec=Nsyn)
+        rankrfunc = RankRightFnIdxTri(embeddings, leftop, rightop,
+            subtensorspec=Nsyn)
+    elif op == 'TATEC':
+        ranklfunc = RankLeftFnIdxTATEC(embeddings, leftopbi, leftoptri, rightopbi, rightoptri,
+            subtensorspec=Nsyn)
+        rankrfunc = RankRightFnIdxTATEC(embeddings, leftopbi, leftoptri, rightopbi, rightoptri,
+            subtensorspec=Nsyn)        
+    
+    true_triples=np.concatenate([idxtl,idxvl,idxl,idxto,idxvo,idxo,idxtr,idxvr,idxr]).reshape(3,idxtl.shape[0]+idxvl.shape[0]+idxl.shape[0]).T
+
+    restest = FilteredRankingScoreIdx(ranklfunc, rankrfunc, idxl, idxr, idxo, true_triples)
+    T10 = np.mean(np.asarray(restest[0] + restest[1]) <= 10) * 100
+    MR = np.mean(np.asarray(restest[0] + restest[1]))
+
+    return MR, T10
 
 if __name__ == '__main__':
     RankingEval(loadmodel=sys.argv[1])
