@@ -209,6 +209,27 @@ class LayerTrans(object):
         """Forward function."""
         return x+y
 
+class LayerdMat(object):
+    """
+    
+    """
+
+    def __init__(self):
+        """
+        Constructor.
+
+        :note: there is no parameter declared in this layer, the parameters
+               are the embeddings of the 'right' member, therefore their
+               dimension have to fit with those declared here: n_inp * n_out.
+        """
+        self.params = []
+
+    def __call__(self, x, y):
+        """Forward function."""
+        # More details on the class and constructor comments.
+
+        return x * y
+
 class Unstructured(object):
     """
     Class for a layer with two input vectors that performs the linear operator
@@ -597,6 +618,155 @@ def RankRightFnIdx(fnsim, embeddings, leftop, rightop, subtensorspec=None):
     return theano.function([idxl, idxo], [simi], on_unused_input='ignore')
 
 
+def RankRightFnIdxBi(embeddings, leftop, rightop, subtensorspec=None):
+    """
+    This function returns a Theano function to measure the similarity score of
+    all 'right' entities given couples of relation and 'left' entities (as
+    index values).
+
+    :param fnsim: similarity function (on Theano variables).
+    :param embeddings: an Embeddings instance.
+    :param leftop: class for the 'left' operator.
+    :param rightop: class for the 'right' operator.
+    :param subtensorspec: only measure the similarity score for the entities
+                          corresponding to the first subtensorspec (int)
+                          entities of the embedding matrix (default None: all
+                          entities).
+    """
+    embedding = embeddings[0]
+    W = embeddings[1]
+    rel_matricesl = embeddings[2]
+    rel_matricesr = embeddings[3]
+    
+    # Inputs
+    idxl = T.iscalar('idxl')
+    idxo = T.iscalar('idxo')
+    # Graph
+    lhs = (embedding.E[:, idxl]).reshape((1, embedding.D))
+    relmatricesl = (rel_matricesl.E[:, idxo]).reshape((1, rel_matricesl.D))
+    relmatricesr = (rel_matricesr.E[:, idxo]).reshape((1, rel_matricesr.D))
+    
+    if subtensorspec is not None:
+        # We compute the score only for a subset of entities
+        rhs = (embedding.E[:, :subtensorspec]).T
+    else:
+        rhs = embedding.E.T
+
+    W_m = W.E.reshape((1, W.D))
+    
+    expP = leftop(lhs, relmatricesl)+leftop(rhs, relmatricesr)+leftop(lhs, rightop(rhs, W_m))
+    simi = -T.sum(expP, axis=1)
+    """
+    Theano function inputs.
+    :input idxl: index value of the 'left' member.
+    :input idxo: index value of the relation member.
+
+    Theano function output.
+    :output simi: vector of score values.
+    """
+    return theano.function([idxl, idxo], [simi], on_unused_input='ignore')
+    
+    
+def RankRightFnIdxTri(embeddings, leftop, rightop, subtensorspec=None):
+    """
+    This function returns a Theano function to measure the similarity score of
+    all 'right' entities given couples of relation and 'left' entities (as
+    index values).
+
+    :param fnsim: similarity function (on Theano variables).
+    :param embeddings: an Embeddings instance.
+    :param leftop: class for the 'left' operator.
+    :param rightop: class for the 'right' operator.
+    :param subtensorspec: only measure the similarity score for the entities
+                          corresponding to the first subtensorspec (int)
+                          entities of the embedding matrix (default None: all
+                          entities).
+    """
+    embedding = embeddings[0]
+    rel_matrices = embeddings[1]
+    
+    # Inputs
+    idxl = T.iscalar('idxl')
+    idxo = T.iscalar('idxo')
+    # Graph
+    lhs = (embedding.E[:, idxl]).reshape((1, embedding.D))
+    relmatrices = (rel_matrices.E[:, idxo]).reshape((1, rel_matrices.D))
+    
+    if subtensorspec is not None:
+        # We compute the score only for a subset of entities
+        rhs = (embedding.E[:, :subtensorspec]).T
+    else:
+        rhs = embedding.E.T
+    
+    expP = leftop(lhs, rightop(rhs, relmatrices))
+    simi = -T.sum(expP, axis=1)
+    """
+    Theano function inputs.
+    :input idxl: index value of the 'left' member.
+    :input idxo: index value of the relation member.
+
+    Theano function output.
+    :output simi: vector of score values.
+    """
+    return theano.function([idxl, idxo], [simi], on_unused_input='ignore')
+    
+    
+def RankRightFnIdxTATEC(embeddings, leftopbi, leftoptri, rightopbi, rightoptri, subtensorspec=None):
+    """
+    This function returns a Theano function to measure the similarity score of
+    all 'right' entities given couples of relation and 'left' entities (as
+    index values).
+
+    :param fnsim: similarity function (on Theano variables).
+    :param embeddings: an Embeddings instance.
+    :param leftop: class for the 'left' operator.
+    :param rightop: class for the 'right' operator.
+    :param subtensorspec: only measure the similarity score for the entities
+                          corresponding to the first subtensorspec (int)
+                          entities of the embedding matrix (default None: all
+                          entities).
+    """
+    embeddingbi = embeddings[0]
+    W = embeddings[1]
+    rel_matricesl = embeddings[2]
+    rel_matricesr = embeddings[3]
+    embeddingtri = embeddings[4]
+    rel_matricestri = embeddings[5]
+
+    # Inputs
+    idxl = T.iscalar('idxl')
+    idxo = T.iscalar('idxo')
+    # Graph
+    if subtensorspec is not None:
+        # We compute the score only for a subset of entities
+        rhsbi = (embeddingbi.E[:, :subtensorspec]).T
+        rhstri = (embeddingtri.E[:, :subtensorspec]).T
+    else:
+        rhsbi = embeddingbi.E.T
+        rhstri = embeddingtri.E.T
+
+    lhsbi = (embeddingbi.E[:, idxl]).reshape((1, embeddingbi.D))
+    lhstri = (embeddingtri.E[:, idxl]).reshape((1, embeddingtri.D))
+    relmatricesl = (rel_matricesl.E[:, idxo]).reshape((1, rel_matricesl.D))
+    relmatricesr = (rel_matricesr.E[:, idxo]).reshape((1, rel_matricesr.D))
+    relmatricestri = (rel_matricestri.E[:, idxo]).reshape((1, rel_matricestri.D))
+
+
+    W_m = W.E.reshape((1, W.D))
+
+    expP = leftopbi(lhsbi, relmatricesl)+leftopbi(rhsbi, relmatricesr)+leftopbi(lhsbi, rightopbi(rhsbi, W_m)) + leftoptri(lhstri, rightoptri(rhstri, relmatricestri))
+    simi = -T.sum(expP, axis=1)
+    """
+    Theano function inputs.
+    :input idxl: index value of the 'left' member.
+    :input idxo: index value of the relation member.
+
+    Theano function output.
+    :output simi: vector of score values.
+    """
+    return theano.function([idxl, idxo], [simi], on_unused_input='ignore')
+    
+    
 def RankLeftFnIdx(fnsim, embeddings, leftop, rightop, subtensorspec=None):
     """
     This function returns a Theano function to measure the similarity score of
@@ -639,6 +809,156 @@ def RankLeftFnIdx(fnsim, embeddings, leftop, rightop, subtensorspec=None):
     return theano.function([idxr, idxo], [simi],
             on_unused_input='ignore')
 
+
+def RankLeftFnIdxBi(embeddings, leftop, rightop, subtensorspec=None):
+    """
+    This function returns a Theano function to measure the similarity score of
+    all 'left' entities given couples of relation and 'right' entities (as
+    index values).
+
+    :param fnsim: similarity function (on Theano variables).
+    :param embeddings: an Embeddings instance.
+    :param leftop: class for the 'left' operator.
+    :param rightop: class for the 'right' operator.
+    :param subtensorspec: only measure the similarity score for the entities
+                          corresponding to the first subtensorspec (int)
+                          entities of the embedding matrix (default None: all
+                          entities).
+    """
+    embedding = embeddings[0]
+    W = embeddings[1]
+    rel_matricesl = embeddings[2]
+    rel_matricesr = embeddings[3]
+    
+    # Inputs
+    idxr = T.iscalar('idxr')
+    idxo = T.iscalar('idxo')
+    # Graph
+    rhs = (embedding.E[:, idxr]).reshape((1, embedding.D))
+    relmatricesl = (rel_matricesl.E[:, idxo]).reshape((1, rel_matricesl.D))
+    relmatricesr = (rel_matricesr.E[:, idxo]).reshape((1, rel_matricesr.D))
+    
+    if subtensorspec is not None:
+        # We compute the score only for a subset of entities
+        lhs = (embedding.E[:, :subtensorspec]).T
+    else:
+        lhs = embedding.E.T
+
+    W_m = W.E.reshape((1, W.D))
+
+    expP = leftop(lhs, relmatricesl)+leftop(rhs, relmatricesr)+leftop(lhs, rightop(rhs, W_m))
+    simi = -T.sum(expP, axis=1)
+    """
+    Theano function inputs.
+    :input idxr: index value of the 'right' member.
+    :input idxo: index value of the relation member.
+
+    Theano function output.
+    :output simi: vector of score values.
+    """
+    return theano.function([idxr, idxo], [simi],
+            on_unused_input='ignore')
+            
+
+def RankLeftFnIdxTri(embeddings, leftop, rightop, subtensorspec=None):
+    """
+    This function returns a Theano function to measure the similarity score of
+    all 'left' entities given couples of relation and 'right' entities (as
+    index values).
+
+    :param fnsim: similarity function (on Theano variables).
+    :param embeddings: an Embeddings instance.
+    :param leftop: class for the 'left' operator.
+    :param rightop: class for the 'right' operator.
+    :param subtensorspec: only measure the similarity score for the entities
+                          corresponding to the first subtensorspec (int)
+                          entities of the embedding matrix (default None: all
+                          entities).
+    """
+    embedding = embeddings[0]
+    rel_matrices = embeddings[1]
+    
+    # Inputs
+    idxr = T.iscalar('idxr')
+    idxo = T.iscalar('idxo')
+    # Graph
+    rhs = (embedding.E[:, idxr]).reshape((1, embedding.D))
+    relmatrices = (rel_matrices.E[:, idxo]).reshape((1, rel_matrices.D))
+    
+    if subtensorspec is not None:
+        # We compute the score only for a subset of entities
+        lhs = (embedding.E[:, :subtensorspec]).T
+    else:
+        lhs = embedding.E.T
+
+    expP = leftop(lhs, rightop(rhs, relmatrices))
+    simi = -T.sum(expP, axis=1)
+    """
+    Theano function inputs.
+    :input idxr: index value of the 'right' member.
+    :input idxo: index value of the relation member.
+
+    Theano function output.
+    :output simi: vector of score values.
+    """
+    return theano.function([idxr, idxo], [simi],
+            on_unused_input='ignore')
+            
+            
+def RankLeftFnIdxTATEC(embeddings, leftopbi, leftoptri, rightopbi, rightoptri, subtensorspec=None):
+    """
+    This function returns a Theano function to measure the similarity score of
+    all 'left' entities given couples of relation and 'right' entities (as
+    index values).
+
+    :param fnsim: similarity function (on Theano variables).
+    :param embeddings: an Embeddings instance.
+    :param leftop: class for the 'left' operator.
+    :param rightop: class for the 'right' operator.
+    :param subtensorspec: only measure the similarity score for the entities
+                          corresponding to the first subtensorspec (int)
+                          entities of the embedding matrix (default None: all
+                          entities).
+    """
+    embeddingbi = embeddings[0]
+    W = embeddings[1]
+    rel_matricesl = embeddings[2]
+    rel_matricesr = embeddings[3]
+    embeddingtri = embeddings[4]
+    rel_matricestri = embeddings[5]
+    
+    # Inputs
+    idxr = T.iscalar('idxr')
+    idxo = T.iscalar('idxo')
+    # Graph
+    if subtensorspec is not None:
+        # We compute the score only for a subset of entities
+        lhsbi = (embeddingbi.E[:, :subtensorspec]).T
+        lhstri = (embeddingtri.E[:, :subtensorspec]).T
+    else:
+        lhsbi = embeddingbi.E.T
+        lhstri = embeddingtri.E.T
+
+    rhsbi = (embeddingbi.E[:, idxr]).reshape((1, embeddingbi.D))
+    rhstri = (embeddingtri.E[:, idxr]).reshape((1, embeddingtri.D))
+    relmatricesl = (rel_matricesl.E[:, idxo]).reshape((1, rel_matricesl.D))
+    relmatricesr = (rel_matricesr.E[:, idxo]).reshape((1, rel_matricesr.D))
+    relmatricestri = (rel_matricestri.E[:, idxo]).reshape((1, rel_matricestri.D))
+
+    W_m = W.E.reshape((1, W.D))
+
+    expP = leftopbi(lhsbi, relmatricesl)+leftopbi(rhsbi, relmatricesr)+leftopbi(lhsbi, rightopbi(rhsbi, W_m)) + leftoptri(lhstri, rightoptri(rhstri, relmatricestri))
+    simi = -T.sum(expP, axis=1)
+    """
+    Theano function inputs.
+    :input idxr: index value of the 'right' member.
+    :input idxo: index value of the relation member.
+
+    Theano function output.
+    :output simi: vector of score values.
+    """
+    return theano.function([idxr, idxo], [simi],
+            on_unused_input='ignore')
 
 def RankRelFnIdx(fnsim, embeddings, leftop, rightop, subtensorspec=None):
     embedding, relationl, relationr = parse_embeddings(embeddings)
@@ -949,6 +1269,334 @@ def TrainFn1Member(fnsim, embeddings, leftop, rightop, marge=1.0, rel=True):
             updates=updates, on_unused_input='ignore')
 
 
+def TrainFn1MemberBi(embeddings, leftop, rightop, marge=1.0):
+    """
+    This function returns a theano function to perform a training iteration,
+    contrasting positive and negative triplets. members are given as sparse
+    matrices. For one positive triplet there are two or three (if rel == True)
+    negative triplets. To create a negative triplet we replace only one member
+    at a time.
+
+    :param fnsim: similarity function (on theano variables).
+    :param embeddings: an embeddings instance.
+    :param leftop: class for the 'left' operator.
+    :param rightop: class for the 'right' operator.
+    :param marge: marge for the cost function.
+    :param rel: boolean, if true we also contrast w.r.t. a negative relation
+                member.
+    """
+    embedding = embeddings[0]
+    W = embeddings[1]
+    rel_matricesl = embeddings[2]
+    rel_matricesr = embeddings[3]
+    
+    # Inputs
+    inpr = S.csr_matrix()
+    inpl = S.csr_matrix()
+    inpo = S.csr_matrix()
+    inpln = S.csr_matrix()
+    inprn = S.csr_matrix()
+    lr = T.scalar('lr')
+    lrparam = T.scalar('lrparam')
+
+    ## Positive triplet
+    lhs = S.dot(embedding.E, inpl).T
+    rhs = S.dot(embedding.E, inpr).T
+    relmatricesl = S.dot(rel_matricesl.E, inpo).T
+    relmatricesr = S.dot(rel_matricesr.E, inpo).T
+
+    ## Negative triplet
+    lhsn = S.dot(embedding.E, inpln).T
+    rhsn = S.dot(embedding.E, inprn).T
+    relmatricesln = S.dot(rel_matricesl.E, inpo).T
+    relmatricesrn = S.dot(rel_matricesr.E, inpo).T
+
+    W_m = W.E.reshape((1, W.D))
+    
+    # Positive triplet score
+    expP = leftop(lhs, relmatricesl)+leftop(rhs, relmatricesr)+leftop(lhs, rightop(rhs, W_m))
+    simi = -T.sum(expP, axis=1)
+    
+    # Negative triple score
+    expNl = leftop(lhsn, relmatricesl)+leftop(rhs, relmatricesr)+leftop(lhsn, rightop(rhs, W_m))
+    expNr = leftop(lhs, relmatricesl)+leftop(rhsn, relmatricesr)+leftop(lhs, rightop(rhsn, W_m))
+    similn = -T.sum(expNl, axis=1)
+    simirn = -T.sum(expNr, axis=1)
+
+    costl, outl = margincost(simi, similn, marge)
+    costr, outr = margincost(simi, simirn, marge)
+
+    cost = costl + costr
+    out = T.concatenate([outl, outr])
+
+    # List of inputs of the function
+    list_in = [lr, lrparam, inpl, inpr, inpo, inpln, inprn]
+
+
+    gradientsparams = T.grad(cost, leftop.params + rightop.params)
+    updates = dict((i, i - lr * j) for i, j in zip(
+        leftop.params + rightop.params, gradientsparams))
+
+    gradients_embedding = T.grad(cost, embedding.E)
+    newE = embedding.E - lr * gradients_embedding
+    updates.update({embedding.E: newE})
+    gradients_embeddingrelMatl = T.grad(cost, rel_matricesl.E)
+    newrelMatl = rel_matricesl.E - lr * gradients_embeddingrelMatl
+    updates.update({rel_matricesl.E: newrelMatl})
+    gradients_embeddingrelMatr = T.grad(cost, rel_matricesr.E)
+    newrelMatr = rel_matricesr.E - lr * gradients_embeddingrelMatr
+    updates.update({rel_matricesr.E: newrelMatr})
+    gradients_embeddingW = T.grad(cost, W.E)
+    newW = W.E - lr * gradients_embeddingW
+    updates.update({W.E: newW})
+    
+    """
+    Theano function inputs.
+    :input lrembeddings: learning rate for the embeddings.
+    :input lrparams: learning rate for the parameters.
+    :input inpl: sparse csr matrix representing the indexes of the positive
+                 triplet 'left' member, shape=(#examples,N [Embeddings]).
+    :input inpr: sparse csr matrix representing the indexes of the positive
+                 triplet 'right' member, shape=(#examples,N [Embeddings]).
+    :input inpo: sparse csr matrix representing the indexes of the positive
+                 triplet relation member, shape=(#examples,N [Embeddings]).
+    :input inpln: sparse csr matrix representing the indexes of the negative
+                  triplet 'left' member, shape=(#examples,N [Embeddings]).
+    :input inprn: sparse csr matrix representing the indexes of the negative
+                  triplet 'right' member, shape=(#examples,N [Embeddings]).
+    :opt input inpon: sparse csr matrix representing the indexes of the
+                      negative triplet relation member, shape=(#examples,N
+                      [Embeddings]).
+
+    Theano function output.
+    :output mean(cost): average cost.
+    :output mean(out): ratio of examples for which the margin is violated,
+                       i.e. for which an update occurs.
+    """
+    return theano.function(list_in, [T.mean(cost), T.mean(out)],
+                updates=updates, on_unused_input='ignore')
+
+
+def TrainFn1MemberTri(embeddings, leftop, rightop, marge=1.0):
+    """
+    This function returns a theano function to perform a training iteration,
+    contrasting positive and negative triplets. members are given as sparse
+    matrices. For one positive triplet there are two or three (if rel == True)
+    negative triplets. To create a negative triplet we replace only one member
+    at a time.
+
+    :param fnsim: similarity function (on theano variables).
+    :param embeddings: an embeddings instance.
+    :param leftop: class for the 'left' operator.
+    :param rightop: class for the 'right' operator.
+    :param marge: marge for the cost function.
+    :param rel: boolean, if true we also contrast w.r.t. a negative relation
+                member.
+    """
+    embedding = embeddings[0]
+    rel_matrices = embeddings[1]
+    
+    # Inputs
+    inpr = S.csr_matrix()
+    inpl = S.csr_matrix()
+    inpo = S.csr_matrix()
+    inpln = S.csr_matrix()
+    inprn = S.csr_matrix()
+    inpon = S.csr_matrix()
+    lrparam = T.scalar('lrparam')
+    lr = T.scalar('lr')
+
+    ## Positive triplet
+    lhs = S.dot(embedding.E, inpl).T
+    rhs = S.dot(embedding.E, inpr).T
+    relmatrices = S.dot(rel_matrices.E, inpo).T
+
+    ## Negative triplet
+    lhsn = S.dot(embedding.E, inpln).T
+    rhsn = S.dot(embedding.E, inprn).T
+    relmatricesn = S.dot(rel_matrices.E, inpo).T
+
+    
+    # Positive triplet score
+    expP = leftop(lhs, rightop(rhs, relmatrices))
+    simi = -T.sum(expP, axis=1)
+    
+    # Negative triple score
+    expNl = leftop(lhsn, rightop(rhs, relmatrices))
+    expNr = leftop(lhs, rightop(rhsn, relmatrices))
+    similn = -T.sum(expNl, axis=1)
+    simirn = -T.sum(expNr, axis=1)
+
+    costl, outl = margincost(simi, similn, marge)
+    costr, outr = margincost(simi, simirn, marge)
+
+    cost = costl + costr
+    out = T.concatenate([outl, outr])
+
+    # List of inputs of the function
+    list_in = [lr, lrparam, inpl, inpr, inpo, inpln, inprn]
+
+
+    gradientsparams = T.grad(cost, leftop.params + rightop.params)
+    updates = dict((i, i - lr * j) for i, j in zip(
+        leftop.params + rightop.params, gradientsparams))
+
+    gradients_embedding = T.grad(cost, embedding.E)
+    newE = embedding.E - lr * gradients_embedding
+    updates.update({embedding.E: newE})
+    gradients_embeddingrelMat = T.grad(cost, rel_matrices.E)
+    newrelMat = rel_matrices.E - lr * gradients_embeddingrelMat
+    updates.update({rel_matrices.E: newrelMat})
+    
+    """
+    Theano function inputs.
+    :input lrembeddings: learning rate for the embeddings.
+    :input lrparams: learning rate for the parameters.
+    :input inpl: sparse csr matrix representing the indexes of the positive
+                 triplet 'left' member, shape=(#examples,N [Embeddings]).
+    :input inpr: sparse csr matrix representing the indexes of the positive
+                 triplet 'right' member, shape=(#examples,N [Embeddings]).
+    :input inpo: sparse csr matrix representing the indexes of the positive
+                 triplet relation member, shape=(#examples,N [Embeddings]).
+    :input inpln: sparse csr matrix representing the indexes of the negative
+                  triplet 'left' member, shape=(#examples,N [Embeddings]).
+    :input inprn: sparse csr matrix representing the indexes of the negative
+                  triplet 'right' member, shape=(#examples,N [Embeddings]).
+    :opt input inpon: sparse csr matrix representing the indexes of the
+                      negative triplet relation member, shape=(#examples,N
+                      [Embeddings]).
+
+    Theano function output.
+    :output mean(cost): average cost.
+    :output mean(out): ratio of examples for which the margin is violated,
+                       i.e. for which an update occurs.
+    """
+    return theano.function(list_in, [T.mean(cost), T.mean(out)],
+                updates=updates, on_unused_input='ignore')
+                
+                
+def TrainFn1MemberTATEC(embeddings, leftopbi, leftoptri, rightopbi, rightoptri, marge=1.0):
+    """
+    This function returns a theano function to perform a training iteration,
+    contrasting positive and negative triplets. members are given as sparse
+    matrices. For one positive triplet there are two or three (if rel == True)
+    negative triplets. To create a negative triplet we replace only one member
+    at a time.
+
+    :param fnsim: similarity function (on theano variables).
+    :param embeddings: an embeddings instance.
+    :param leftop: class for the 'left' operator.
+    :param rightop: class for the 'right' operator.
+    :param marge: marge for the cost function.
+    :param rel: boolean, if true we also contrast w.r.t. a negative relation
+                member.
+    """
+    embeddingbi = embeddings[0]
+    W = embeddings[1]
+    rel_matricesl = embeddings[2]
+    rel_matricesr = embeddings[3]
+    embeddingtri = embeddings[4]
+    rel_matricestri = embeddings[5]
+    
+    # Inputs
+    inpr = S.csr_matrix()
+    inpl = S.csr_matrix()
+    inpo = S.csr_matrix()
+    inpln = S.csr_matrix()
+    inprn = S.csr_matrix()
+    lrbi = T.scalar('lrbi')
+    lrtri = T.scalar('lrtri')
+    
+    ## Positive triplet
+    lhsbi = S.dot(embeddingbi.E, inpl).T
+    rhsbi = S.dot(embeddingbi.E, inpr).T
+    lhstri = S.dot(embeddingtri.E, inpl).T
+    rhstri = S.dot(embeddingtri.E, inpr).T
+    relmatricesl = S.dot(rel_matricesl.E, inpo).T
+    relmatricesr = S.dot(rel_matricesr.E, inpo).T
+    reltri= S.dot(rel_matricestri.E, inpo).T
+
+    ## Negative triplet
+    lhsbin = S.dot(embeddingbi.E, inpln).T
+    rhsbin = S.dot(embeddingbi.E, inprn).T
+    lhstrin = S.dot(embeddingtri.E, inpln).T
+    rhstrin = S.dot(embeddingtri.E, inprn).T
+    relmatricesln = S.dot(rel_matricesl.E, inpo).T
+    relmatricesrn = S.dot(rel_matricesr.E, inpo).T
+    reltrin= S.dot(rel_matricestri.E, inpo).T
+
+    W_m = W.E.reshape((1, W.D))
+    
+    # Positive triplet score
+    expP = leftopbi(lhsbi, relmatricesl)+leftopbi(rhsbi, relmatricesr)+leftopbi(lhsbi, rightopbi(rhsbi, W_m))+ leftoptri(lhstri, rightoptri(rhstri, reltri))
+    simi = -T.sum(expP, axis=1)
+    
+    # Negative triple score
+    expNl = leftopbi(lhsbin, relmatricesl)+leftopbi(rhsbi, relmatricesr)+leftopbi(lhsbin, rightopbi(rhsbi, W_m))+ leftoptri(lhstrin, rightoptri(rhstri, reltri))
+    expNr = leftopbi(lhsbi, relmatricesl)+leftopbi(rhsbin, relmatricesr)+leftopbi(lhsbi, rightopbi(rhsbin, W_m))+ leftoptri(lhstri, rightoptri(rhstrin, reltri))
+    similn = -T.sum(expNl, axis=1)
+    simirn = -T.sum(expNr, axis=1)
+
+    costl, outl = margincost(simi, similn, marge)
+    costr, outr = margincost(simi, simirn, marge)
+
+    cost = costl + costr
+    out = T.concatenate([outl, outr]) 
+
+    # List of inputs of the function
+    list_in = [lrbi, lrtri, inpl, inpr, inpo, inpln, inprn]
+
+
+    gradientsparams = T.grad(cost, leftopbi.params + rightopbi.params + leftoptri.params + rightoptri.params)
+    updates = dict((i, i - lrbi * j) for i, j in zip(
+        leftopbi.params + rightopbi.params + leftoptri.params + rightoptri.params, gradientsparams))
+
+    gradients_embeddingbi = T.grad(cost, embeddingbi.E)
+    newEbi = embeddingbi.E - lrbi * gradients_embeddingbi
+    updates.update({embeddingbi.E: newEbi})
+    gradients_embeddingtri = T.grad(cost, embeddingtri.E)
+    newEtri = embeddingtri.E - lrtri * gradients_embeddingtri
+    updates.update({embeddingtri.E: newEtri})
+    gradients_embeddingrelMatl = T.grad(cost, rel_matricesl.E)
+    newrelMatl = rel_matricesl.E - lrbi * gradients_embeddingrelMatl
+    updates.update({rel_matricesl.E: newrelMatl})
+    gradients_embeddingrelMatr = T.grad(cost, rel_matricesr.E)
+    newrelMatr = rel_matricesr.E - lrbi * gradients_embeddingrelMatr
+    updates.update({rel_matricesr.E: newrelMatr})
+    gradients_embeddingrelMattri = T.grad(cost, rel_matricestri.E)
+    newrelMattri = rel_matricestri.E - lrtri * gradients_embeddingrelMattri
+    updates.update({rel_matricestri.E: newrelMattri})
+    gradients_embeddingW = T.grad(cost, W.E)
+    newW = W.E - lrbi * gradients_embeddingW
+    updates.update({W.E: newW})
+    
+    """
+    Theano function inputs.
+    :input lrembeddings: learning rate for the embeddings.
+    :input lrparams: learning rate for the parameters.
+    :input inpl: sparse csr matrix representing the indexes of the positive
+                 triplet 'left' member, shape=(#examples,N [Embeddings]).
+    :input inpr: sparse csr matrix representing the indexes of the positive
+                 triplet 'right' member, shape=(#examples,N [Embeddings]).
+    :input inpo: sparse csr matrix representing the indexes of the positive
+                 triplet relation member, shape=(#examples,N [Embeddings]).
+    :input inpln: sparse csr matrix representing the indexes of the negative
+                  triplet 'left' member, shape=(#examples,N [Embeddings]).
+    :input inprn: sparse csr matrix representing the indexes of the negative
+                  triplet 'right' member, shape=(#examples,N [Embeddings]).
+    :opt input inpon: sparse csr matrix representing the indexes of the
+                      negative triplet relation member, shape=(#examples,N
+                      [Embeddings]).
+
+    Theano function output.
+    :output mean(cost): average cost.
+    :output mean(out): ratio of examples for which the margin is violated,
+                       i.e. for which an update occurs.
+    """
+    return theano.function(list_in, [T.mean(cost), T.mean(out)],
+                updates=updates, on_unused_input='ignore')
+                
+
 def ForwardFn1Member(fnsim, embeddings, leftop, rightop, marge=1.0, rel=True):
     """
     This function returns a theano function to perform a forward step,
@@ -1047,6 +1695,38 @@ def RankingScoreIdx(sl, sr, idxl, idxr, idxo):
     return errl, errr
 
 
+def FilteredRankingScoreIdx(sl, sr, idxl, idxr, idxo, true_triples):
+    """
+    This function computes the rank list of the lhs and rhs, over a list of
+    lhs, rhs and rel indexes.
+
+    :param sl: Theano function created with RankLeftFnIdx().
+    :param sr: Theano function created with RankRightFnIdx().
+    :param idxl: list of 'left' indices.
+    :param idxr: list of 'right' indices.
+    :param idxo: list of relation indices.
+    """
+    errl = []
+    errr = []
+    for l, o, r in zip(idxl, idxo, idxr):
+        il=np.argwhere(true_triples[:,0]==l).reshape(-1,)
+        io=np.argwhere(true_triples[:,1]==o).reshape(-1,)
+        ir=np.argwhere(true_triples[:,2]==r).reshape(-1,)
+ 
+        inter_l = [i for i in ir if i in io]
+        rmv_idx_l = [true_triples[i,0] for i in inter_l if true_triples[i,0] != l]
+        scores_l = (sl(r, o)[0]).flatten()
+        scores_l[rmv_idx_l] = -np.inf
+        errl += [np.argsort(np.argsort(-scores_l)).flatten()[l] + 1]
+
+        inter_r = [i for i in il if i in io]
+        rmv_idx_r = [true_triples[i,2] for i in inter_r if true_triples[i,2] != r]
+        scores_r = (sr(l, o)[0]).flatten()
+        scores_r[rmv_idx_r] = -np.inf
+        errr += [np.argsort(np.argsort(-scores_r)).flatten()[r] + 1]
+    return errl, errr
+    
+    
 def RankingScoreRightIdx(sr, idxl, idxr, idxo):
     """
     This function computes the rank list of the rhs, over a list of lhs, rhs
