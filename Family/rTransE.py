@@ -481,7 +481,6 @@ def train_lstm(
                     restest = FilteredRankingScoreIdx(ranklfunc, rankrfunc, testl, testr, testo, true_triples)
                     test_MR = numpy.mean(restest[0]+restest[1])
                     test_HITS5 = numpy.mean(numpy.asarray(restest[0] + restest[1]) <= 5) * 100
-                    print "TEST HITS@5: %s"%(test_HITS5)
                     #saveto=''
                     #params = unzip(tparams)
                     #numpy.savez(saveto,  **params)
