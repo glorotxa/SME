@@ -10,11 +10,14 @@ The architecture of this package has been designed by **Xavier Glorot** (https:/
 This package proposes scripts using Theano to perform training and evaluation on several datasets of the models: 
 - **Structured Embeddings** (SE) defined in (Bordes et al., AAAI 2011);
 - **Semantic Matching Energy** (SME_lin & SME_bil) defined in (Bordes et al., MLJ 2013);
-- *NEW* **Translating Embeddings** (TransE) defined in (Bordes et al., NIPS 2013).
+- **Translating Embeddings** (TransE) defined in (Bordes et al., NIPS 2013).
+- **TATEC** defined in (Garcia-Duran et al., ECML14, arxiv15).
+
 
 Please refer to the following pages for more details and references:  
 - https://everest.hds.utc.fr/doku.php?id=en:smemlj12
-- *NEW* https://everest.hds.utc.fr/doku.php?id=en:transe
+- https://everest.hds.utc.fr/doku.php?id=en:transe
+- https://everest.hds.utc.fr/doku.php?id=en:2and3ways
 
 Content of the package:
 - model.py : contains the classes and functions to create the different models and Theano functions (training, evaluation...).
@@ -31,7 +34,8 @@ The datasets currently available are:
  * **Multi-relational benchmarks** (Kinhsips, UMLS & Nations -- Tensor folder) to be downloaded from https://everest.hds.utc.fr/doku.php?id=en:smemlj12
  * **WordNet** (WN folder) to be downloaded from https://everest.hds.utc.fr/doku.php?id=en:smemlj12
  * **Freebase** (FB folder) used in (Bordes et al., AAAI 2011) to be downloaded from https://everest.hds.utc.fr/doku.php?id=en:smemlj12
- * *NEW* **Freebase15k** (FB15k folder)  used in (Bordes et al., NIPS 2013) to be downloaded from https://everest.hds.utc.fr/doku.php?id=en:transe
+ * **Freebase15k** (FB15k folder)  used in (Bordes et al., NIPS 2013) to be downloaded from https://everest.hds.utc.fr/doku.php?id=en:transe
+ * **Synthethic family database** (Family folder) user is (Garcia-Duran et al. arxiv15a) to be downloaded from https://everest.hds.utc.fr/doku.php?id=en:2and3ways
 
 
 
@@ -65,6 +69,7 @@ If you use this code, you could provide the link to the github page: https://git
 
 7. References
 -----------------------------------------------------------------
+- (Garcia-Duran et al., arxiv 15) *Combining Two And Three-Way Embeddings Models for Link Prediction in Knowledge Bases* Alberto Garcia-Duran, Antoine Bordes, Nicolas Usunier and Yves Grandvalet. http://arxiv.org/abs/1506.00999
 - (Bordes et al., NIPS 2013) *Translating Embeddings for Modeling Multi-relational Data* (2013). Antoine Bordes, Nicolas Usunier, Alberto Garcia-Duran, Jason Weston and Oksana Yakhnenko. In Proceedings of Neural Information Processing Systems (NIPS 26), Lake Taho, NV, USA. Dec. 2013.
 - (Bordes et al., MLJ 2013) *A Semantic Matching Energy Function for Learning with Multi-relational Data* (2013). Antoine Bordes, Xavier Glorot, Jason Weston, and Yoshua Bengio. in Machine Learning. Springer, DOI: 10.1007/s10994-013-5363-6, May 2013
 - (Bordes et al., AAAI 2011) *Learning Structured Embeddings of Knowledge Bases* (2011). Antoine Bordes, Jason Weston, Ronan Collobert and Yoshua Bengio. in Proceedings of the 25th Conference on Artificial Intelligence (AAAI), AAAI Press.
